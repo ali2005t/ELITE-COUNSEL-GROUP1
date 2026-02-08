@@ -974,46 +974,43 @@
             cursorOutline.animate({ left: `${posX}px`, top: `${posY}px` }, { duration: 500, fill: "forwards" });
         });
 
-        // Particles with Legal Icons
+        // Smart Merge Background: Original Network + Fixed Legal Icons
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let particlesArray;
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
 
-        const legalIcons = [
+        // Functional Draw for Static Background Icons (Scales)
+        function drawStaticScales(ctx, x, y, size) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.strokeStyle = 'rgba(212, 175, 55, 0.08)'; // Very low opacity
+            ctx.lineWidth = size / 10;
+            ctx.beginPath();
+            // Base & Pillar
+            ctx.moveTo(-size, size); ctx.lineTo(size, size);
+            ctx.moveTo(0, size); ctx.lineTo(0, -size);
+            // Beam
+            ctx.moveTo(-size, -size * 0.6); ctx.lineTo(size, -size * 0.6);
             // Scales
-            (ctx, x, y, size, color) => {
-                ctx.strokeStyle = color; ctx.lineWidth = size / 2;
-                ctx.beginPath(); ctx.moveTo(x - size, y + size); ctx.lineTo(x + size, y + size); // Base
-                ctx.moveTo(x, y + size); ctx.lineTo(x, y - size); // Pillar
-                ctx.moveTo(x - size, y - size / 2); ctx.lineTo(x + size, y - size / 2); // Beam
-                ctx.stroke();
-            },
-            // Gavel
-            (ctx, x, y, size, color) => {
-                ctx.fillStyle = color;
-                ctx.fillRect(x - size, y - size / 2, size * 2, size); // Head
-                ctx.fillRect(x - size / 4, y + size / 2, size / 2, size * 1.5); // Handle
-            },
-            // Scroll/Document
-            (ctx, x, y, size, color) => {
-                ctx.strokeStyle = color; ctx.lineWidth = size / 3;
-                ctx.strokeRect(x - size / 1.5, y - size, size * 1.3, size * 2);
-                ctx.beginPath(); ctx.moveTo(x - size / 3, y - size / 2); ctx.lineTo(x + size / 2, y - size / 2);
-                ctx.moveTo(x - size / 3, y); ctx.lineTo(x + size / 2, y);
-                ctx.moveTo(x - size / 3, y + size / 2); ctx.lineTo(x + size / 2, y + size / 2);
-                ctx.stroke();
-            }
-        ];
+            ctx.moveTo(-size, -size * 0.6); ctx.lineTo(-size * 1.3, size * 0.4);
+            ctx.moveTo(-size, -size * 0.6); ctx.lineTo(-size * 0.7, size * 0.4);
+            ctx.moveTo(size, -size * 0.6); ctx.lineTo(size * 1.3, size * 0.4);
+            ctx.moveTo(size, -size * 0.6); ctx.lineTo(size * 0.7, size * 0.4);
+            ctx.stroke();
+            ctx.restore();
+        }
 
         class Particle {
             constructor(x, y, directionX, directionY, size, color) {
                 this.x = x; this.y = y; this.directionX = directionX; this.directionY = directionY;
                 this.size = size; this.color = color;
-                this.iconIndex = Math.floor(Math.random() * legalIcons.length);
             }
             draw() {
-                legalIcons[this.iconIndex](ctx, this.x, this.y, this.size, this.color);
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
             }
             update() {
                 if (this.x > canvas.width || this.x < 0) { this.directionX = -this.directionX; }
@@ -1022,39 +1019,59 @@
                 this.draw();
             }
         }
+
         function initParticles() {
             particlesArray = [];
-            let numberOfParticles = (canvas.height * canvas.width) / 25000; // Fewer particles for icons
+            let numberOfParticles = (canvas.height * canvas.width) / 15000;
             for (let i = 0; i < numberOfParticles; i++) {
-                let size = (Math.random() * 5) + 3;
+                let size = (Math.random() * 2) + 1;
                 let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
                 let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
-                let directionX = (Math.random() * 0.3) - 0.15; let directionY = (Math.random() * 0.3) - 0.15;
-                let color = 'rgba(212, 175, 55, 0.4)';
+                let directionX = (Math.random() * 0.3) - 0.15;
+                let directionY = (Math.random() * 0.3) - 0.15;
+                let color = 'rgba(212, 175, 55, 0.5)';
                 particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
             }
         }
+
         function animateParticles() {
             requestAnimationFrame(animateParticles);
             ctx.clearRect(0, 0, innerWidth, innerHeight);
-            for (let i = 0; i < particlesArray.length; i++) { particlesArray[i].update(); }
+
+            // Draw static background icons
+            drawStaticScales(ctx, canvas.width * 0.85, canvas.height * 0.2, 120);
+            drawStaticScales(ctx, canvas.width * 0.15, canvas.height * 0.8, 150);
+
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
             connect();
         }
+
         function connect() {
             let opacityValue = 1;
             for (let a = 0; a < particlesArray.length; a++) {
                 for (let b = a; b < particlesArray.length; b++) {
                     let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
-                    if (distance < (canvas.width / 8) * (canvas.height / 8)) {
-                        opacityValue = 1 - (distance / 40000);
-                        ctx.strokeStyle = 'rgba(212, 175, 55,' + (opacityValue * 0.2) + ')';
-                        ctx.lineWidth = 0.5; ctx.beginPath(); ctx.moveTo(particlesArray[a].x, particlesArray[a].y); ctx.lineTo(particlesArray[b].x, particlesArray[b].y); ctx.stroke();
+                    if (distance < (canvas.width / 7) * (canvas.height / 7)) {
+                        opacityValue = 1 - (distance / 20000);
+                        ctx.strokeStyle = 'rgba(212, 175, 55,' + (opacityValue * 0.15) + ')';
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
                     }
                 }
             }
         }
-        window.addEventListener('resize', () => { canvas.width = innerWidth; canvas.height = innerHeight; initParticles(); });
-        initParticles(); animateParticles();
+        window.addEventListener('resize', () => {
+            canvas.width = innerWidth;
+            canvas.height = innerHeight;
+            initParticles();
+        });
+        initParticles();
+        animateParticles();
 
         // Project Modal
         const projectModal = document.getElementById('project-modal');
