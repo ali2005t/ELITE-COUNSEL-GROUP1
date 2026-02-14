@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elite Counsel Group | لوحة التحكم</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
+    <style>
+        :root {
+            --primary-gold: #D4AF37;
+            --dark-bg: #0a0a0a;
+            --dark-card: #141414;
+            --text-main: #ffffff;
+            --text-secondary: #9ca3af;
+            --border-color: rgba(255, 255, 255, 0.05);
+            --card-bg: rgba(255, 255, 255, 0.03);
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: var(--primary-gold);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -10px rgba(212, 175, 55, 0.1);
+        }
+
+        /* Views (SPA Routing) */
+        .view-section {
+            display: none !important;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .view-section.active {
+            display: block !important;
+            opacity: 1;
+        }
+
+        /* Loader */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: var(--dark-bg);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--primary-gold);
+            border-top: 3px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body class="selection:bg-yellow-600 selection:text-white overflow-x-hidden">
+    <div id="view-login" class="view-section min-h-screen flex items-center justify-center px-4 bg-[#010a18]">
+        <div class="glass-card p-8 rounded-2xl w-full max-w-md relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-500 to-yellow-300"></div>
+            <div class="text-center mb-8">
+                <i class="fas fa-user-shield text-5xl text-yellow-500 mb-4"></i>
+                <h2 class="text-2xl font-bold text-white">دخول الإدارة</h2>
+                <p class="text-gray-400 text-sm mt-2">Elite Counsel Group Admin</p>
+            </div>
+            <form id="login-form" class="space-y-6">
+                <div>
+                    <label class="block text-gray-400 text-sm mb-2">اسم المستخدم</label>
+                    <input type="text" id="admin-user"
+                        class="w-full p-3 bg-[#021024] border border-gray-700 rounded-lg text-white focus:border-yellow-500 outline-none"
+                        placeholder="Username">
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-sm mb-2">كلمة المرور</label>
+                    <input type="password" id="admin-pass"
+                        class="w-full p-3 bg-[#021024] border border-gray-700 rounded-lg text-white focus:border-yellow-500 outline-none"
+                        placeholder="••••••••">
+                </div>
+                <button type="submit"
+                    class="w-full py-3 bg-gradient-to-r from-yellow-600 to-yellow-500 text-black font-bold rounded-lg hover:shadow-lg transition">تسجيل
+                    الدخول</button>
+            </form>
+            <p id="login-error" class="text-red-500 text-sm text-center mt-4 hidden">بيانات الدخول غير صحيحة</p>
+        </div>
+    </div>
+
+    <!-- VIEW: ADMIN DASHBOARD -->
+    <div id="view-admin" class="view-section min-h-screen px-2 pb-2 pt-0 md:px-6 md:pb-6 md:pt-0 bg-[#021024]">
+        <div class="max-w-6xl mx-auto">
+            <!-- Header -->
+            <div
+                class="flex flex-col md:flex-row justify-between items-center mb-6 bg-[#052659] p-4 rounded-b-xl rounded-t-none border-x border-b border-t-0 border-gray-700 gap-4 shadow-lg">
+                <div class="text-center md:text-right">
+                    <h1 class="text-xl md:text-2xl font-bold text-white">لوحة التحكم</h1>
+                    <p class="text-gray-400 text-xs md:text-sm">إدارة الخدمات والمحتوى</p>
+                </div>
+                <div class="flex gap-3 w-full md:w-auto justify-center">
+                    <a href="index.html"
+                        class="px-4 py-2 border border-gray-600 rounded-lg text-gray-300 hover:text-white transition flex items-center text-sm"><i
+                            class="fas fa-eye ml-2"></i> معاينة</a>
+                    <button onclick="adminManager.logout()"
+                        class="px-4 py-2 bg-red-900/50 border border-red-800 rounded-lg text-red-300 hover:bg-red-900 transition text-sm"><i
+                            class="fas fa-sign-out-alt ml-2"></i> خروج</button>
+                </div>
+            </div>
+            <!-- Navigation Tabs -->
+            <div class="flex gap-4 mb-6 border-b border-gray-700 pb-2">
+                <button onclick="switchAdminTab('services')" id="tab-services"
+                    class="px-4 py-2 text-yellow-500 border-b-2 border-yellow-500 font-bold transition">الخدمات</button>
+                <button onclick="switchAdminTab('sections')" id="tab-sections"
+                    class="px-4 py-2 text-gray-400 hover:text-white transition">الأقسام (أعمالنا/فيديو)</button>
+                <button onclick="switchAdminTab('settings')" id="tab-settings"
+                    class="px-4 py-2 text-gray-400 hover:text-white transition">الإعدادات العامة</button>
+            </div>
+
+            <!-- TAB: SERVICES -->
+            <div id="admin-view-services" class="admin-tab-content">
+                <!-- Add Service Form -->
+                <div class="glass-card p-6 rounded-xl mb-8">
+                    <h3 class="text-lg font-bold text-yellow-500 mb-4 border-b border-gray-700 pb-2"><i
+                            class="fas fa-plus-circle ml-2"></i> إضافة / تعديل خدمة</h3>
+                    <form id="service-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="hidden" id="service-id">
+                        <input type="text" id="service-title" placeholder="عنوان الخدمة"
+                            class="p-3 bg-[#021024] border border-gray-700 rounded-lg text-white outline-none focus:border-yellow-500"
+                            required>
+                        <div class="md:col-span-2">
+                            <label class="block text-gray-400 text-sm mb-2">اختر الأيقونة</label>
+                            <input type="hidden" id="service-icon">
+                            <div id="icon-picker"
+                                class="grid grid-cols-6 md:grid-cols-10 gap-2 p-3 bg-[#021024] border border-gray-700 rounded-lg max-h-40 overflow-y-auto">
+                                <!-- Icons injected by JS -->
+                            </div>
+                        </div>
+                        <!-- Image Input Removed -->
+                        <input type="number" id="service-order" placeholder="الترتيب (رقم)"
+                            class="p-3 bg-[#021024] border border-gray-700 rounded-lg text-white outline-none focus:border-yellow-500">
+                        <textarea id="service-desc" rows="3" placeholder="وصف مختصر"
+                            class="md:col-span-2 p-3 bg-[#021024] border border-gray-700 rounded-lg text-white outline-none focus:border-yellow-500"
+                            required></textarea>
+                        <textarea id="service-full-desc" rows="5"
+                            placeholder="محتوى صفحة الخدمة (الشرح التفصيلي للخدمة)"
+                            class="md:col-span-2 p-3 bg-[#021024] border border-gray-700 rounded-lg text-white outline-none focus:border-yellow-500"
+                            required></textarea>
+                        <textarea id="service-steps" rows="4" placeholder="خطوات العمل (كل خطوة في سطر منفصل)"
+                            class="md:col-span-2 p-3 bg-[#021024] border border-gray-700 rounded-lg text-white outline-none focus:border-yellow-500"></textarea>
+                        <div class="md:col-span-2 flex gap-3">
+                            <button type="submit"
+                                class="flex-1 py-3 bg-green-600 text-white font-bold rounded-lg hover:bg-green-500 transition">حفظ
+                                الخدمة</button>
+                            <button type="button" onclick="adminManager.clearForm()"
+                                class="px-6 py-3 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 transition">إلغاء</button>
+                        </div>
+                    </form>
+                </div>
+                <!-- Services List -->
+                <div class="glass-card p-4 md:p-6 rounded-xl">
+                    <h3 class="text-lg font-bold text-white mb-4"><i class="fas fa-list ml-2"></i> قائمة الخدمات الحالية
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-gray-300">
+                            <thead class="hidden md:table-header-group text-xs uppercase bg-gray-800 text-gray-400">
+                                <tr>
+                                    <th class="px-4 py-3 rounded-tr-lg">الترتيب</th>
+                                    <th class="px-4 py-3">العنوان</th>
+                                    <th class="px-4 py-3">الوصف المختصر</th>
+                                    <th class="px-4 py-3 rounded-tl-lg text-center">إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-services-list" class="block md:table-row-group divide-y divide-gray-700">
+                                <!-- Rows injected here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div> <!-- Close admin-view-services -->
+
+        <!-- TAB: SECTIONS -->
+        <div id="admin-view-sections" class="admin-tab-content hidden">
+            <!-- Add New Section -->
+            <div class="bg-[#052659] p-4 md:p-6 rounded-xl border border-gray-700 mb-8 shadow-lg">
+                <h2 class="text-xl font-bold text-white mb-4 border-r-4 border-yellow-500 pr-3">إضافة / تعديل
+                    قسم
+                </h2>
+                <form id="section-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="hidden" id="section-id">
+                    <input type="text" id="section-title" placeholder="عنوان القسم (مثلاً: سابقة أعمالنا)"
+                        class="p-3 bg-[#021024] border border-gray-700 rounded-lg text-white outline-none focus:border-yellow-500"
+                        required>
+                    <input type="number" id="section-order" placeholder="ترتيب العرض (رقم)"
+                        class="p-3 bg-[#021024] border border-gray-700 rounded-lg text-white outline-none focus:border-yellow-500"
+                        required>
+
+                    <div class="md:col-span-2 flex gap-3">
+                        <button type="submit"
+                            class="flex-1 bg-yellow-600 text-black font-bold py-3 rounded-lg hover:bg-yellow-500 transition">حفظ
+                            القسم</button>
+                        <button type="button" onclick="sectionsManager.resetForm()"
+                            class="px-6 border border-gray-600 rounded-lg text-gray-300 hover:text-white transition">إلغاء</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Sections List -->
+            <div class="bg-[#052659] p-4 md:p-6 rounded-xl border border-gray-700 shadow-lg">
+                <h2 class="text-xl font-bold text-white mb-4 border-r-4 border-yellow-500 pr-3">الأقسام الحالية
+                </h2>
+                <div id="sections-list" class="space-y-4">
+                    <!-- Dynamic Sections List Here -->
+                    <div class="text-gray-400 text-center py-8">جاري التحميل...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: SECTION ITEMS (Nested View) -->
+        <div id="admin-view-section-items" class="hidden mt-8">
+            <div class="flex justify-between items-center mb-6">
+                <button onclick="switchAdminTab('sections')"
+                    class="text-yellow-500 hover:text-yellow-400 flex items-center gap-2"><i
+                        class="fas fa-arrow-right"></i> عودة للأقسام</button>
+                <h2 id="current-section-title" class="text-2xl font-bold text-white">إدارة محتوى القسم</h2>
+            </div>
+
+            <!-- Add Item Form -->
+            <div class="bg-[#052659] p-4 md:p-6 rounded-xl border border-gray-700 mb-8 shadow-lg">
+                <h3 class="text-lg font-bold text-white mb-4">إضافة عنصر جديد</h3>
+                <form id="item-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="hidden" id="item-id">
+                    <input type="hidden" id="item-section-id">
+
+                    <select id="item-type"
+                        class="p-3 bg-[#021024] border border-gray-700 rounded-lg text-white outline-none focus:border-yellow-500">
+                        <option value="image">صورة</option>
+                        <option value="video">فيديو</option>
+                    </select>
+                    <input type="number" id="item-order" placeholder="الترتيب"
+                        class="p-3 bg-[#021024] border border-gray-700 rounded-lg text-white outline-none focus:border-yellow-500">
+
+                    <input type="text" id="item-url" placeholder="رابط الصورة أو الفيديو"
+                        class="md:col-span-2 p-3 bg-[#021024] border border-gray-700 rounded-lg text-white outline-none focus:border-yellow-500"
+                        required>
+                    <textarea id="item-desc" rows="2" placeholder="وصف (اختياري)"
+                        class="md:col-span-2 p-3 bg-[#021024] border border-gray-700 rounded-lg text-white outline-none focus:border-yellow-500"></textarea>
+
+                    <div class="md:col-span-2 flex gap-3">
+                        <button type="submit"
+                            class="flex-1 bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-500 transition">إضافة
+                            العنصر</button>
+                        <button type="button" onclick="itemsManager.resetForm()"
+                            class="px-6 border border-gray-600 rounded-lg text-gray-300 hover:text-white transition">إلغاء</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Items Grid -->
+            <div id="items-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Dynamic Items -->
+            </div>
+        </div>
+
+        <!-- TAB: SETTINGS -->
+        <div id="admin-view-settings" class="admin-tab-content hidden">
+            <div class="bg-[#052659] p-4 md:p-6 rounded-xl border border-gray-700 shadow-lg">
+                <h2 class="text-xl font-bold text-white mb-6 border-r-4 border-yellow-500 pr-3">الإعدادات العامة</h2>
+                <form id="settings-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <!-- Contact Info -->
+                    <div class="md:col-span-2">
+                        <h3 class="text-yellow-500 font-bold mb-3 border-b border-gray-700 pb-1">بيانات التواصل</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" id="set-phone" placeholder="رقم الهاتف"
+                                class="p-3 bg-[#021024] border border-gray-700 rounded-lg text-white outline-none focus:border-yellow-500">
+                            <input type="text" id="set-whatsapp" placeholder="رابط واتساب (https://wa.me/...)"
+                                class="p-3 bg-[#021024] border border-gray-700 rounded-lg text-white outline-none focus:border-yellow-500">
+                            <input type="text" id="set-address" placeholder="العنوان"
+                                class="md:col-span-2 p-3 bg-[#021024] border border-gray-700 rounded-lg text-white outline-none focus:border-yellow-500">
+                        </div>
+                    </div>
+
+                    <!-- Social Media -->
+                    <div class="md:col-span-2">
+                        <h3 class="text-yellow-500 font-bold mb-3 border-b border-gray-700 pb-1">روابط السوشيال ميديا
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" id="set-facebook" placeholder="رابط فيسبوك"
+                                class="p-3 bg-[#021024] border border-gray-700 rounded-lg text-white outline-none focus:border-yellow-500">
+                            <input type="text" id="set-instagram" placeholder="رابط انستجرام"
+                                class="p-3 bg-[#021024] border border-gray-700 rounded-lg text-white outline-none focus:border-yellow-500">
+                            <input type="text" id="set-twitter" placeholder="رابط تويتر/X"
+                                class="p-3 bg-[#021024] border border-gray-700 rounded-lg text-white outline-none focus:border-yellow-500">
+                            <input type="text" id="set-linkedin" placeholder="رابط لينكد إن"
+                                class="p-3 bg-[#021024] border border-gray-700 rounded-lg text-white outline-none focus:border-yellow-500">
+                        </div>
+                    </div>
+
+                    <!-- Texts -->
+                    <div class="md:col-span-2">
+                        <h3 class="text-yellow-500 font-bold mb-3 border-b border-gray-700 pb-1">نصوص الموقع</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-gray-400 text-sm mb-1">وصف "من نحن"</label>
+                                <textarea id="set-about" rows="4"
+                                    class="w-full p-3 bg-[#021024] border border-gray-700 rounded-lg text-white outline-none focus:border-yellow-500"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <button type="submit"
+                            class="w-full py-3 bg-gradient-to-r from-yellow-600 to-yellow-500 text-black font-bold rounded-lg hover:shadow-lg transition">حفظ
+                            الإعدادات</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="firebase-config.js"></script> <!-- Load Config -->
+    <script>
+        AOS.init();
+
+        // --- DATA & CONFIG ---
+        const availableIcons = [
+            'fas fa-balance-scale', 'fas fa-gavel', 'fas fa-university', 'fas fa-book-open',
+            'fas fa-briefcase', 'fas fa-handshake', 'fas fa-landmark', 'fas fa-file-contract',
+            'fas fa-shield-alt', 'fas fa-users', 'fas fa-globe', 'fas fa-passport',
+            'fas fa-plane', 'fas fa-building', 'fas fa-city', 'fas fa-comments',
+            'fas fa-envelope', 'fas fa-phone', 'fas fa-search', 'fas fa-check-circle'
+        ];
+
+        let servicesData = [];
+        let currentUser = null;
+
+        const renderIconPicker = () => {
+            const container = document.getElementById('icon-picker');
+            container.innerHTML = availableIcons.map(icon => `
+                <div onclick="selectIcon('${icon}')" 
+                     class="icon-option h-10 w-10 flex items-center justify-center rounded cursor-pointer hover:bg-yellow-500/20 transition text-gray-400 border border-transparent"
+                     data-icon="${icon}">
+                    <i class="${icon} text-lg"></i>
+                </div>
+            `).join('');
+        };
+
+        const selectIcon = (icon) => {
+            document.getElementById('service-icon').value = icon;
+            document.querySelectorAll('.icon-option').forEach(el => {
+                el.classList.remove('bg-yellow-500', 'text-black', 'border-yellow-500');
+                el.classList.add('text-gray-400', 'border-transparent');
+                if (el.dataset.icon === icon) {
+                    el.classList.remove('text-gray-400', 'border-transparent');
+                    el.classList.add('bg-yellow-500', 'text-black', 'border-yellow-500');
+                }
+            });
+        };
+
+        const initAuth = async () => {
+            renderIconPicker(); // Init Picker
+            try { await auth.signInAnonymously(); } catch (error) { loadServices(); }
+            auth.onAuthStateChanged(user => { if (user) { currentUser = user; loadServices(); } });
+
+            // Check admin login status on init
+            if (localStorage.getItem('admin_logged_in')) {
+                router.navigate('admin');
+            } else {
+                router.navigate('login');
+            }
+        };
+
+        const loadServices = () => {
+            const loader = document.getElementById('loader');
+            db.collection('services').orderBy('order', 'asc')
+                .onSnapshot(snapshot => {
+                    servicesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    if (router.currentView === 'admin') adminManager.renderList();
+                    if (loader) loader.style.display = 'none';
+                }, error => { if (loader) loader.style.display = 'none'; });
+        };
+
+        // --- ROUTER ---
+        const router = {
+            currentView: 'login',
+            navigate: (viewName) => {
+                document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+                const view = document.getElementById(`view-${viewName}`);
+                if (view) { view.classList.add('active'); router.currentView = viewName; window.scrollTo(0, 0); }
+
+                if (viewName === 'admin') {
+                    adminManager.renderList();
+                }
+            }
+        };
+
+        // --- ADMIN MANAGER ---
+        const adminManager = {
+            login: (e) => {
+                e.preventDefault();
+                const u = document.getElementById('admin-user').value;
+                const p = document.getElementById('admin-pass').value;
+
+                // Auto-append gmail if not present
+                const email = u.includes('@') ? u : `${u}@gmail.com`;
+
+                auth.signInWithEmailAndPassword(email, p)
+                    .then((userCredential) => {
+                        localStorage.setItem('admin_logged_in', 'true');
+                        localStorage.setItem('admin_username', u);
+                        router.navigate('admin');
+                    })
+                    .catch((error) => {
+                        console.error("Login error:", error);
+                        document.getElementById('login-error').classList.remove('hidden');
+                    });
+            },
+            logout: () => {
+                auth.signOut().then(() => {
+                    localStorage.removeItem('admin_logged_in');
+                    router.navigate('login');
+                });
+            },
+            renderList: () => {
+                const list = document.getElementById('admin-services-list');
+                list.innerHTML = servicesData.map(s => `
+                    <tr class="flex flex-col md:table-row bg-gray-800/30 md:bg-transparent mb-4 md:mb-0 rounded-lg md:rounded-none p-4 md:p-0 border border-gray-700 md:border-none hover:bg-gray-800/50 transition">
+                        <td class="px-2 py-2 md:px-4 md:py-3 flex justify-between md:table-cell">
+                            <span class="md:hidden text-gray-500 font-bold ml-2">الترتيب:</span>
+                            <span>${s.order || 0}</span>
+                        </td>
+                        <td class="px-2 py-2 md:px-4 md:py-3 font-bold text-white flex justify-between md:table-cell">
+                             <span class="md:hidden text-gray-500 font-bold ml-2">العنوان:</span>
+                             <span>${s.title}</span>
+                        </td>
+                        <td class="px-2 py-2 md:px-4 md:py-3 text-sm text-gray-300 block md:table-cell md:truncate md:max-w-xs">
+                             <div class="md:hidden text-gray-500 font-bold mb-1">الوصف:</div>
+                             ${s.desc}
+                        </td>
+                        <td class="px-2 py-4 md:px-4 md:py-3 text-center border-t border-gray-700 md:border-0 mt-2 md:mt-0 pt-3 md:pt-0">
+                            <div class="flex justify-end md:justify-center gap-2">
+                                <button onclick="adminManager.edit('${s.id}')" class="flex-1 md:flex-none py-2 md:py-0 bg-blue-900/30 md:bg-transparent border md:border-none border-blue-800 rounded text-blue-400 hover:text-blue-300 mx-1" title="تعديل تفاصيل/صفحة الخدمة"><i class="fas fa-edit"></i> <span class="md:hidden mr-1">تعديل</span></button>
+                                <button onclick="adminManager.delete('${s.id}')" class="flex-1 md:flex-none py-2 md:py-0 bg-red-900/30 md:bg-transparent border md:border-none border-red-800 rounded text-red-400 hover:text-red-300 mx-1" title="حذف الخدمة"><i class="fas fa-trash"></i> <span class="md:hidden mr-1">حذف</span></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            },
+            save: async (e) => {
+                e.preventDefault();
+                if (!currentUser) { alert('خطأ في الاتصال بقاعدة البيانات'); return; }
+                const id = document.getElementById('service-id').value;
+                const data = {
+                    title: document.getElementById('service-title').value,
+                    icon: document.getElementById('service-icon').value,
+                    // Image removed
+                    order: parseInt(document.getElementById('service-order').value) || 0,
+                    desc: document.getElementById('service-desc').value,
+                    fullDesc: document.getElementById('service-full-desc').value,
+                    steps: document.getElementById('service-steps').value.split(/\n|,/).map(s => s.trim()).filter(s => s)
+                };
+                try {
+                    if (id) await db.collection('services').doc(id).update(data);
+                    else await db.collection('services').add(data);
+                    adminManager.clearForm(); alert('تم الحفظ بنجاح');
+                } catch (err) { alert('حدث خطأ أثناء الحفظ'); }
+            },
+            edit: (id) => {
+                const s = servicesData.find(i => i.id === id);
+                if (!s) return;
+                document.getElementById('service-id').value = s.id;
+                document.getElementById('service-title').value = s.title;
+                selectIcon(s.icon || availableIcons[0]); // Select Icon
+                // Image removed
+                document.getElementById('service-order').value = s.order;
+                document.getElementById('service-desc').value = s.desc;
+                document.getElementById('service-full-desc').value = s.fullDesc || '';
+                document.getElementById('service-steps').value = (Array.isArray(s.steps) ? s.steps.join('\n') : '');
+                window.scrollTo(0, 0);
+            },
+            delete: async (id) => {
+                if (confirm('هل أنت متأكد؟')) await db.collection('services').doc(id).delete();
+            },
+            clearForm: () => {
+                document.getElementById('service-form').reset();
+                document.getElementById('service-id').value = '';
+            }
+        };
+
+        // --- SECTIONS MANAGER ---
+        let sectionsData = [];
+        let sectionItemsData = [];
+        let currentSectionId = null;
+
+        const sectionsManager = {
+            load: async () => {
+                const snapshot = await db.collection('sections').orderBy('order', 'asc').get();
+                sectionsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                sectionsManager.renderList();
+            },
+            renderList: () => {
+                const list = document.getElementById('sections-list');
+                if (sectionsData.length === 0) { list.innerHTML = '<p class="text-gray-500 text-center">لا توجد أقسام.</p>'; return; }
+                list.innerHTML = sectionsData.map(s => `
+                    <div class="flex items-center justify-between bg-gray-800/30 p-4 rounded-lg border border-gray-700">
+                        <div>
+                            <span class="text-yellow-500 font-bold ml-2">#${s.order}</span>
+                            <span class="text-white font-bold text-lg">${s.title}</span>
+                        </div>
+                        <div class="flex gap-2">
+                             <button onclick="sectionsManager.manageItems('${s.id}', '${s.title}')" class="px-3 py-1 bg-green-900/30 border border-green-800 rounded text-green-400 hover:text-green-300 text-sm">محتوى القسم</button>
+                             <button onclick="sectionsManager.edit('${s.id}')" class="px-3 py-1 bg-blue-900/30 border border-blue-800 rounded text-blue-400 hover:text-blue-300 text-sm">تعديل</button>
+                             <button onclick="sectionsManager.delete('${s.id}')" class="px-3 py-1 bg-red-900/30 border border-red-800 rounded text-red-400 hover:text-red-300 text-sm">حذف</button>
+                        </div>
+                    </div>
+                `).join('');
+            },
+            save: async (e) => {
+                e.preventDefault();
+                const id = document.getElementById('section-id').value;
+                const data = {
+                    title: document.getElementById('section-title').value,
+                    order: parseInt(document.getElementById('section-order').value) || 0
+                };
+                try {
+                    if (id) await db.collection('sections').doc(id).update(data);
+                    else await db.collection('sections').add(data);
+                    sectionsManager.resetForm(); sectionsManager.load(); alert('تم الحفظ');
+                } catch (err) { alert('خطأ في الحفظ'); console.error(err); }
+            },
+            edit: (id) => {
+                const s = sectionsData.find(i => i.id === id);
+                if (!s) return;
+                document.getElementById('section-id').value = s.id;
+                document.getElementById('section-title').value = s.title;
+                document.getElementById('section-order').value = s.order;
+            },
+            delete: async (id) => {
+                if (confirm('حذف القسم سيحذف جميع محتوياته. هل أنت متأكد؟')) {
+                    // Delete items first (batch delete would be better but keep it simple)
+                    const itemsSnap = await db.collection('section_items').where('sectionId', '==', id).get();
+                    itemsSnap.forEach(doc => doc.ref.delete());
+                    await db.collection('sections').doc(id).delete();
+                    sectionsManager.load();
+                }
+            },
+            resetForm: () => {
+                document.getElementById('section-form').reset();
+                document.getElementById('section-id').value = '';
+            },
+            manageItems: (sectionId, sectionTitle) => {
+                currentSectionId = sectionId;
+                document.getElementById('current-section-title').innerText = `إدارة محتوى: ${sectionTitle}`;
+                document.getElementById('admin-view-sections').classList.add('hidden');
+                document.getElementById('admin-view-section-items').classList.remove('hidden');
+                itemsManager.load(sectionId);
+            }
+        };
+
+        // --- ITEMS MANAGER ---
+        const itemsManager = {
+            load: async (sectionId) => {
+                document.getElementById('items-grid').innerHTML = '<p class="text-white col-span-3 text-center">جاري التحميل...</p>';
+                const snapshot = await db.collection('section_items').where('sectionId', '==', sectionId).orderBy('order', 'asc').get();
+                sectionItemsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                itemsManager.renderGrid();
+            },
+            renderGrid: () => {
+                const grid = document.getElementById('items-grid');
+                if (sectionItemsData.length === 0) { grid.innerHTML = '<p class="text-gray-500 col-span-3 text-center">لا توجد عناصر.</p>'; return; }
+                grid.innerHTML = sectionItemsData.map(item => `
+                    <div class="bg-gray-800/50 rounded-lg p-3 border border-gray-700 relative group">
+                        <div class="absolute top-2 left-2 z-10 flex gap-2 opacity-0 group-hover:opacity-100 transition">
+                             <button onclick="itemsManager.edit('${item.id}')" class="bg-blue-600 text-white p-2 rounded-full shadow hover:bg-blue-500"><i class="fas fa-edit"></i></button>
+                             <button onclick="itemsManager.delete('${item.id}')" class="bg-red-600 text-white p-2 rounded-full shadow hover:bg-red-500"><i class="fas fa-trash"></i></button>
+                        </div>
+                        ${item.type === 'video'
+                        ? `<div class="aspect-video bg-black flex items-center justify-center rounded mb-2"><i class="fas fa-play-circle text-4xl text-white/50"></i></div>`
+                        : `<img src="${item.url}" class="w-full h-40 object-cover rounded mb-2" onerror="this.src='https://placehold.co/600x400?text=Error'">`
+                    }
+                        <div class="text-xs text-gray-400 mb-1">#${item.order} (${item.type === 'video' ? 'فيديو' : 'صورة'})</div>
+                        <p class="text-white text-sm truncate">${item.desc || 'بدون وصف'}</p>
+                    </div>
+                `).join('');
+            },
+            save: async (e) => {
+                e.preventDefault();
+                if (!currentSectionId) return;
+                const id = document.getElementById('item-id').value;
+                const data = {
+                    sectionId: currentSectionId,
+                    type: document.getElementById('item-type').value,
+                    url: document.getElementById('item-url').value,
+                    desc: document.getElementById('item-desc').value,
+                    order: parseInt(document.getElementById('item-order').value) || 0
+                };
+                try {
+                    if (id) await db.collection('section_items').doc(id).update(data);
+                    else await db.collection('section_items').add(data);
+                    itemsManager.resetForm(); itemsManager.load(currentSectionId); alert('تم حفظ العنصر');
+                } catch (err) { alert('خطأ في الحفظ'); console.error(err); }
+            },
+            edit: (id) => {
+                const item = sectionItemsData.find(i => i.id === id);
+                if (!item) return;
+                document.getElementById('item-id').value = item.id;
+                document.getElementById('item-type').value = item.type;
+                document.getElementById('item-url').value = item.url;
+                document.getElementById('item-desc').value = item.desc;
+                document.getElementById('item-order').value = item.order;
+            },
+            delete: async (id) => {
+                if (confirm('حذف هذا العنصر؟')) {
+                    await db.collection('section_items').doc(id).delete();
+                    itemsManager.load(currentSectionId);
+                }
+            },
+            resetForm: () => {
+                document.getElementById('item-form').reset();
+                document.getElementById('item-id').value = '';
+            }
+        };
+
+        // --- SETTINGS MANAGER ---
+        const settingsManager = {
+            load: async () => {
+                try {
+                    const doc = await db.collection('settings').doc('main').get();
+                    if (doc.exists) {
+                        const data = doc.data();
+                        document.getElementById('set-phone').value = data.phone || '';
+                        document.getElementById('set-whatsapp').value = data.whatsapp || '';
+                        document.getElementById('set-address').value = data.address || '';
+                        document.getElementById('set-facebook').value = data.facebook || '';
+                        document.getElementById('set-instagram').value = data.instagram || '';
+                        document.getElementById('set-twitter').value = data.twitter || '';
+                        document.getElementById('set-linkedin').value = data.linkedin || '';
+                        document.getElementById('set-about').value = data.aboutText || '';
+                    }
+                } catch (e) {
+                    console.error('Error loading settings:', e);
+                }
+            },
+            save: async (e) => {
+                e.preventDefault();
+                const data = {
+                    phone: document.getElementById('set-phone').value,
+                    whatsapp: document.getElementById('set-whatsapp').value,
+                    address: document.getElementById('set-address').value,
+                    facebook: document.getElementById('set-facebook').value,
+                    instagram: document.getElementById('set-instagram').value,
+                    twitter: document.getElementById('set-twitter').value,
+                    linkedin: document.getElementById('set-linkedin').value,
+                    aboutText: document.getElementById('set-about').value
+                };
+                try {
+                    await db.collection('settings').doc('main').set(data, { merge: true });
+                    alert('تم حفظ الإعدادات بنجاح');
+                } catch (err) {
+                    alert('خطأ في حفظ الإعدادات');
+                    console.error(err);
+                }
+            }
+        };
+
+        const switchAdminTab = (tab) => {
+            // UI Toggle
+            ['services', 'sections', 'settings'].forEach(t => {
+                const el = document.getElementById(`tab-${t}`);
+                if (t === tab) {
+                    el.classList.remove('text-gray-400');
+                    el.classList.add('text-yellow-500', 'border-b-2', 'border-yellow-500', 'font-bold');
+                } else {
+                    el.classList.add('text-gray-400');
+                    el.classList.remove('text-yellow-500', 'border-b-2', 'border-yellow-500', 'font-bold');
+                }
+            });
+
+            // View Toggle
+            document.getElementById('admin-view-services').classList.add('hidden');
+            document.getElementById('admin-view-sections').classList.add('hidden');
+            document.getElementById('admin-view-section-items').classList.add('hidden');
+            document.getElementById('admin-view-settings').classList.add('hidden');
+
+            document.getElementById(`admin-view-${tab}`).classList.remove('hidden');
+
+            if (tab === 'sections') sectionsManager.load();
+            if (tab === 'settings') settingsManager.load();
+        };
+
+        // --- EVENTS ---
+        document.getElementById('login-form').addEventListener('submit', adminManager.login);
+        document.getElementById('service-form').addEventListener('submit', adminManager.save);
+
+        // New Events
+        document.getElementById('section-form').addEventListener('submit', sectionsManager.save);
+        document.getElementById('item-form').addEventListener('submit', itemsManager.save);
+        document.getElementById('settings-form').addEventListener('submit', settingsManager.save);
+
+        if (localStorage.getItem('admin_username')) document.getElementById('admin-user').value = localStorage.getItem('admin_username');
+
+        initAuth();
+    </script>
+</body>
+
+</html>

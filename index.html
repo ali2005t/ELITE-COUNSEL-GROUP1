@@ -5,11 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elite Counsel Group | تأسيس شركات واستشارات قانونية</title>
+    <meta name="description"
+        content="Elite Counsel Group - شريكك القانوني الأول لتأسيس الشركات، الجنسية المصرية، والاستشارات القانونية المتخصصة. حلول قانونية متكاملة للأفراد والمستثمرين.">
+    <meta name="keywords"
+        content="تأسيس شركات, جنسية مصرية, استشارات قانونية, محامي, قضايا أسرة, تحكيم دولي, استثمار في مصر">
+    <meta property="og:title" content="Elite Counsel Group | الحلول القانونية المتكاملة">
+    <meta property="og:description"
+        content="نحميك قانونياً ونبني مستقبلك. خدمات تأسيس الشركات والجنسية والاستشارات القانونية.">
+    <meta property="og:url" content="https://elite-counsel-group.web.app">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Google Fonts (Cairo & Tajawal) -->
+    <!-- Google Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700&display=swap"
         rel="stylesheet">
@@ -17,29 +25,24 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- AOS Animation Library -->
+    <!-- AOS Animation -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
 
     <style>
         :root {
             --primary-gold: #D4AF37;
-            --secondary-gold: #C5A028;
             --dark-bg: #0a0a0a;
             --dark-card: #141414;
             --text-main: #ffffff;
             --text-secondary: #9ca3af;
             --border-color: rgba(255, 255, 255, 0.05);
             --card-bg: rgba(255, 255, 255, 0.03);
-        }
-
-        /* Light Mode Variables */
-        body.light-mode {
-            --dark-bg: #f8f9fa;
-            --dark-card: #ffffff;
-            --text-main: #1a1a1a;
-            --text-secondary: #4b5563;
-            --border-color: rgba(0, 0, 0, 0.1);
-            --card-bg: rgba(255, 255, 255, 0.8);
+            --header-bg: rgba(10, 10, 10, 0.95);
         }
 
         body {
@@ -47,9 +50,6 @@
             background-color: var(--dark-bg);
             color: var(--text-main);
             overflow-x: hidden;
-            transition: background-color 0.5s ease, color 0.5s ease;
-            cursor: none !important;
-            /* Force hide default cursor */
         }
 
         /* Apply Variables */
@@ -59,117 +59,63 @@
             color: var(--text-secondary) !important;
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--dark-bg);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary-gold);
-            border-radius: 4px;
-        }
-
-        /* Canvas Background */
-        #bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.4;
-        }
-
-        /* Golden Text Gradient */
-        .text-gold-gradient {
-            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            background-size: 200% auto;
-            animation: shine 5s linear infinite;
-        }
-
-        @keyframes shine {
-            to {
-                background-position: 200% center;
-            }
-        }
-
         /* Glassmorphism */
         .glass-card {
             background: var(--card-bg);
             backdrop-filter: blur(10px);
             border: 1px solid var(--border-color);
-            transition: all 0.4s ease;
-        }
-
-        body.light-mode .glass-card {
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            background: #ffffff;
-        }
-
-        .glass-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--primary-gold);
-            box-shadow: 0 10px 30px -10px rgba(212, 175, 55, 0.3);
-        }
-
-        /* Navbar */
-        nav {
             transition: all 0.3s ease;
         }
 
-        nav.scrolled {
-            background: var(--dark-bg);
-            backdrop-filter: blur(10px);
-            padding-top: 1rem;
-            padding-bottom: 1rem;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-            border-bottom: 1px solid var(--border-color);
+        .glass-card:hover {
+            border-color: var(--primary-gold);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -10px rgba(212, 175, 55, 0.1);
         }
 
-        /* Cursor Effect - DIAMOND SHAPE FIXED */
-        .cursor-dot {
-            width: 10px;
-            height: 10px;
-            background-color: var(--primary-gold);
-            position: fixed;
-            top: 0;
-            left: 0;
-            border-radius: 0;
-            transform: translate(-50%, -50%) rotate(45deg);
-            z-index: 10000;
-            /* Higher Z-index */
-            pointer-events: none;
-            transition: width 0.3s, height 0.3s, background-color 0.3s;
+        /* Views (SPA Routing) */
+        .view-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
         }
 
-        .cursor-outline {
-            width: 30px;
-            height: 30px;
-            border: 1px solid var(--primary-gold);
-            position: fixed;
-            top: 0;
-            left: 0;
-            border-radius: 0;
-            z-index: 10000;
-            /* Higher Z-index */
-            pointer-events: none;
-            transition: transform 0.15s ease-out;
-            transform: translate(-50%, -50%) rotate(45deg);
-        }
-
-        /* Hover effect for cursor */
-        body:hover .cursor-dot {
+        .view-section.active {
+            display: block;
             opacity: 1;
         }
 
-        /* Modal */
+        /* Loader */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: var(--dark-bg);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--primary-gold);
+            border-top: 3px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Modals */
         .modal {
             transition: opacity 0.3s ease-in-out;
             opacity: 0;
@@ -182,972 +128,651 @@
             pointer-events: auto;
         }
 
-        /* WhatsApp Button */
-        .whatsapp-float {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background-color: #25d366;
-            color: #FFF;
-            border-radius: 50px;
-            text-align: center;
-            font-size: 30px;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-            z-index: 100;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 60px;
-            height: 60px;
-            animation: pulse-green 2s infinite;
-            cursor: pointer;
+        /* Golden Gradient Text */
+        .text-gold-gradient {
+            background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
-        .whatsapp-float:hover {
-            transform: scale(1.1);
-            background-color: #20b858;
-        }
-
-        @keyframes pulse-green {
+        /* Hero Floating Animations */
+        @keyframes float {
             0% {
-                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+                transform: translateY(0px) rotate(0deg);
             }
 
-            70% {
-                box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+            50% {
+                transform: translateY(-40px) rotate(10deg);
             }
 
             100% {
-                box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+                transform: translateY(0px) rotate(0deg);
             }
         }
 
-        /* Partner Logos Filter */
-        body.light-mode .partner-logo {
-            filter: grayscale(100%) opacity(0.7);
-        }
-
-        .partner-logo {
-            filter: grayscale(100%) invert(1) opacity(0.6);
-            transition: all 0.3s;
-        }
-
-        body.light-mode .partner-logo:hover {
-            filter: grayscale(0%) opacity(1);
-        }
-
-        .partner-logo:hover {
-            filter: grayscale(0%) invert(0) opacity(1);
-        }
-
-        /* FAQ Animation */
-        details>summary {
-            list-style: none;
-            cursor: pointer;
-        }
-
-        details>summary::-webkit-details-marker {
-            display: none;
-        }
-
-        details[open] summary~* {
-            animation: sweep .5s ease-in-out;
-        }
-
-        @keyframes sweep {
+        @keyframes float-reverse {
             0% {
-                opacity: 0;
-                transform: translateY(-10px)
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-50px) rotate(-10deg);
             }
 
             100% {
-                opacity: 1;
-                transform: translateY(0)
+                transform: translateY(0px) rotate(0deg);
             }
+        }
+
+        @keyframes float-slow {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-60px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        @keyframes float-slower {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-80px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .animate-float-reverse {
+            animation: float-reverse 7s ease-in-out infinite;
+        }
+
+        .animate-float-slow {
+            animation: float-slow 10s ease-in-out infinite;
+        }
+
+        .animate-float-slower {
+            animation: float-slower 12s ease-in-out infinite;
         }
     </style>
 </head>
 
 <body class="selection:bg-yellow-600 selection:text-white">
 
-    <!-- Canvas Background -->
-    <canvas id="bg-canvas"></canvas>
-
-    <!-- Custom Cursor (Removed hidden classes to force show) -->
-    <div class="cursor-dot"></div>
-    <div class="cursor-outline"></div>
+    <!-- Loader -->
+    <div id="loader">
+        <div class="spinner"></div>
+    </div>
 
     <!-- WhatsApp Floating Button -->
-    <a href="https://wa.me/201000545644?text=مرحباً،%20أريد%20استشارة%20بخصوص%20تأسيس%20شركة" class="whatsapp-float"
-        target="_blank" title="تواصل عبر واتساب">
+    <a href="https://wa.me/201000545644" target="_blank"
+        class="fixed bottom-8 right-8 w-14 h-14 bg-green-500 rounded-full flex items-center justify-center text-white text-3xl shadow-lg hover:bg-green-600 transition z-50 animate-pulse">
         <i class="fab fa-whatsapp"></i>
     </a>
 
-    <!-- Service Details Modal -->
-    <div id="project-modal"
-        class="modal fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-90 px-4 backdrop-blur-sm">
-        <div
-            class="bg-[var(--dark-card)] border border-[var(--border-color)] rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative shadow-2xl shadow-yellow-500/10">
-            <button id="close-modal"
-                class="absolute top-4 left-4 text-gray-400 hover:text-yellow-500 text-3xl z-10 transition">&times;</button>
-            <div class="grid md:grid-cols-2">
-                <div class="h-64 md:h-auto relative">
-                    <img id="modal-img" src="" alt="Service Image" class="absolute inset-0 w-full h-full object-cover">
-                </div>
-                <div class="p-8">
-                    <h3 id="modal-title" class="text-3xl font-bold text-yellow-500 mb-2"></h3>
-                    <p id="modal-category" class="text-sm text-gray-400 mb-6 uppercase tracking-wider"></p>
-                    <p id="modal-desc" class="text-[var(--text-main)] leading-relaxed mb-6 font-['Tajawal']"></p>
-                    <div class="mb-6">
-                        <h4 class="text-[var(--text-main)] font-bold mb-2">مميزات الخدمة:</h4>
-                        <div id="modal-tags" class="flex flex-wrap gap-2"></div>
-                    </div>
-                    <a href="#contact" onclick="closeModal()"
-                        class="inline-block px-6 py-3 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400 transition">اطلب
-                        استشارة مجانية</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Terms Modal -->
-    <div id="terms-modal"
-        class="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-90 px-4 backdrop-blur-sm">
-        <div
-            class="bg-[var(--dark-card)] border border-[var(--border-color)] rounded-2xl max-w-3xl w-full max-h-[85vh] overflow-y-auto relative shadow-2xl shadow-yellow-500/10 p-8">
-            <button onclick="closeStaticModal('terms-modal')"
-                class="absolute top-4 left-4 text-gray-400 hover:text-yellow-500 text-3xl z-10 transition">&times;</button>
-            <h2 class="text-3xl font-bold text-yellow-500 mb-6 border-b border-[var(--border-color)] pb-4">الشروط
-                والأحكام</h2>
-            <div class="text-[var(--text-main)] leading-relaxed space-y-4 font-['Tajawal'] text-justify">
-                <p>مرحباً بكم في Elite Counsel Group. يرجى قراءة هذه الشروط والأحكام بعناية قبل استخدام خدماتنا.</p>
-
-                <h3 class="text-xl font-bold text-yellow-500 mt-4">1. قبول الشروط</h3>
-                <p class="text-gray-400">بمجرد التعامل معنا أو استخدام موقعنا الإلكتروني، فإنك توافق على الالتزام بهذه
-                    الشروط والأحكام وجميع القوانين واللوائح المعمول بها.</p>
-
-                <h3 class="text-xl font-bold text-yellow-500 mt-4">2. الخدمات المقدمة</h3>
-                <p class="text-gray-400">نحن نقدم خدمات استشارية في مجال تأسيس الشركات، استخراج التراخيص، والاستشارات
-                    القانونية. جميع الاستشارات تعتمد على المعلومات المقدمة من العميل والقوانين السارية وقت تقديم الخدمة.
-                </p>
-
-                <h3 class="text-xl font-bold text-yellow-500 mt-4">3. الملكية الفكرية</h3>
-                <p class="text-gray-400">جميع المحتويات الموجودة على هذا الموقع بما في ذلك النصوص، الشعارات، الصور،
-                    والبرمجيات هي ملكية خاصة لـ Elite Counsel Group ومحمية بموجب قوانين حقوق النشر.</p>
-
-                <h3 class="text-xl font-bold text-yellow-500 mt-4">4. حدود المسؤولية</h3>
-                <p class="text-gray-400">لا تتحمل الشركة مسؤولية أي خسائر غير مباشرة أو تبعية قد تنشأ عن استخدامك
-                    لخدماتنا، ونبذل قصارى جهدنا لضمان دقة المعلومات القانونية المقدمة.</p>
-
-                <h3 class="text-xl font-bold text-yellow-500 mt-4">5. التعديلات</h3>
-                <p class="text-gray-400">نحتفظ بالحق في تعديل هذه الشروط في أي وقت. يعتبر استمرار استخدامك للموقع بعد
-                    نشر التعديلات قبولاً لها.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Privacy Modal -->
-    <div id="privacy-modal"
-        class="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-90 px-4 backdrop-blur-sm">
-        <div
-            class="bg-[var(--dark-card)] border border-[var(--border-color)] rounded-2xl max-w-3xl w-full max-h-[85vh] overflow-y-auto relative shadow-2xl shadow-yellow-500/10 p-8">
-            <button onclick="closeStaticModal('privacy-modal')"
-                class="absolute top-4 left-4 text-gray-400 hover:text-yellow-500 text-3xl z-10 transition">&times;</button>
-            <h2 class="text-3xl font-bold text-yellow-500 mb-6 border-b border-[var(--border-color)] pb-4">سياسة
-                الخصوصية</h2>
-            <div class="text-[var(--text-main)] leading-relaxed space-y-4 font-['Tajawal'] text-justify">
-                <p>في Elite Counsel Group، نولي أهمية قصوى لخصوصية عملائنا. توضح هذه السياسة كيفية جمعنا واستخدامنا
-                    وحمايتنا لمعلوماتك الشخصية.</p>
-
-                <h3 class="text-xl font-bold text-yellow-500 mt-4">1. المعلومات التي نجمعها</h3>
-                <p class="text-gray-400">قد نجمع معلومات شخصية مثل الاسم، البريد الإلكتروني، رقم الهاتف، وتفاصيل الشركة
-                    عند تعبئة نماذج التواصل أو طلب خدمة.</p>
-
-                <h3 class="text-xl font-bold text-yellow-500 mt-4">2. كيفية استخدام المعلومات</h3>
-                <p class="text-gray-400">نستخدم المعلومات لتقديم الخدمات المطلوبة، التواصل معك بخصوص تحديثات ملفك،
-                    وتحسين تجربة المستخدم على موقعنا.</p>
-
-                <h3 class="text-xl font-bold text-yellow-500 mt-4">3. حماية البيانات</h3>
-                <p class="text-gray-400">نطبق إجراءات أمنية صارمة لحماية معلوماتك من الوصول غير المصرح به أو التغيير أو
-                    الإفصاح. لا نقوم ببيع بياناتك لأي طرف ثالث.</p>
-
-                <h3 class="text-xl font-bold text-yellow-500 mt-4">4. ملفات تعريف الارتباط (Cookies)</h3>
-                <p class="text-gray-400">قد يستخدم موقعنا ملفات تعريف الارتباط لتحسين تجربتك وتذكر تفضيلاتك.</p>
-
-                <h3 class="text-xl font-bold text-yellow-500 mt-4">5. حقوقك</h3>
-                <p class="text-gray-400">لديك الحق في طلب الوصول إلى بياناتك الشخصية التي نحتفظ بها أو تصحيحها أو حذفها
-                    في أي وقت عن طريق التواصل معنا.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Navbar -->
-    <nav class="fixed w-full z-50 py-4 px-6 md:px-12 flex justify-between items-center" id="navbar">
-        <div class="text-2xl md:text-3xl font-bold tracking-tighter flex items-center gap-2" data-aos="fade-down">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 py-4 px-6 md:px-12 flex justify-between items-center glass-card border-b-0 rounded-none bg-[#0a0a0a]/95"
+        id="navbar">
+        <div class="text-2xl font-bold tracking-tighter flex items-center gap-2 cursor-pointer"
+            onclick="router.navigate('home')">
             <i class="fas fa-balance-scale text-yellow-500"></i>
-            <div>
-                <span class="text-[var(--text-main)]">Elite Counsel</span><span class="text-yellow-500"> Group</span>
-            </div>
+            <div><span class="text-white">Elite Counsel</span><span class="text-yellow-500"> Group</span></div>
         </div>
-
         <div class="hidden lg:flex space-x-reverse space-x-6 text-sm font-semibold tracking-wide items-center">
-            <a href="#home"
-                class="text-[var(--text-secondary)] hover:text-yellow-500 transition duration-300">الرئيسية</a>
-            <a href="#about" class="text-[var(--text-secondary)] hover:text-yellow-500 transition duration-300">من
-                نحن</a>
-            <a href="#services"
-                class="text-[var(--text-secondary)] hover:text-yellow-500 transition duration-300">خدماتنا</a>
-            <a href="#why-us" class="text-[var(--text-secondary)] hover:text-yellow-500 transition duration-300">لماذا
-                نحن؟</a>
-            <a href="#stats"
-                class="text-[var(--text-secondary)] hover:text-yellow-500 transition duration-300">إنجازاتنا</a>
-            <a href="#contact"
-                class="px-6 py-2 border border-yellow-500 text-yellow-500 rounded-full hover:bg-yellow-500 hover:text-black transition duration-300">تواصل
+            <a href="javascript:router.navigate('home')"
+                class="text-gray-300 hover:text-yellow-500 transition">الرئيسية</a>
+            <a href="#about" class="text-gray-300 hover:text-yellow-500 transition">من نحن</a>
+            <a href="#services-section" class="text-gray-300 hover:text-yellow-500 transition">الخدمات</a>
+            <a href="#contact-section"
+                class="px-6 py-2 border border-yellow-500 text-yellow-500 rounded-full hover:bg-yellow-500 hover:text-black transition">تواصل
                 معنا</a>
-
-            <!-- Dark/Light Mode Toggle -->
-            <button id="theme-toggle"
-                class="w-10 h-10 rounded-full bg-[var(--card-bg)] border border-[var(--border-color)] flex items-center justify-center text-yellow-500 hover:scale-110 transition">
-                <i class="fas fa-moon"></i>
-            </button>
         </div>
-
-        <button class="lg:hidden text-[var(--text-main)] text-2xl" id="mobile-menu-btn">
-            <i class="fas fa-bars"></i>
-        </button>
     </nav>
 
-    <!-- Mobile Menu Overlay -->
-    <div id="mobile-menu"
-        class="fixed inset-0 bg-black bg-opacity-95 z-40 transform translate-x-full transition-transform duration-300 flex flex-col justify-center items-center space-y-8 md:hidden">
-        <button id="close-menu" class="absolute top-6 left-6 text-white text-3xl">&times;</button>
-        <a href="#home" class="text-2xl text-white hover:text-yellow-500">الرئيسية</a>
-        <a href="#about" class="text-2xl text-white hover:text-yellow-500">من نحن</a>
-        <a href="#services" class="text-2xl text-white hover:text-yellow-500">خدماتنا</a>
-        <a href="#why-us" class="text-2xl text-white hover:text-yellow-500">لماذا نحن؟</a>
-        <a href="#stats" class="text-2xl text-white hover:text-yellow-500">إنجازاتنا</a>
-        <a href="#contact" class="text-2xl text-yellow-500">تواصل معنا</a>
+    <!-- MAIN VIEW: HOME -->
+    <div id="view-home" class="view-section active pt-20">
+
+        <!-- 1. Hero Section -->
+        <section class="min-h-[90vh] flex items-center justify-center relative px-6 text-center">
+            <div class="max-w-4xl relative z-10">
+                <div class="flex justify-center mb-6">
+                    <img src="logo.jpg" alt="Elite Counsel Group Logo"
+                        class="h-32 w-32 md:h-48 md:w-48 object-cover rounded-full border-4 border-yellow-500 shadow-2xl bg-black/50">
+                </div>
+                <h2 class="text-3xl md:text-5xl font-black text-white mb-2 animate-fade-in-up tracking-widest">Elite
+                    Counsel Group</h2>
+                <p class="text-yellow-500 text-lg mb-4 font-bold tracking-widest animate-fade-in-up delay-100">حلول
+                    قانونية واستثمارية متكاملة</p>
+                <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight text-white animate-fade-in-up delay-100">
+                    من أول خطوة…<br><span class="text-gold-gradient">لحد القرار النهائي</span>
+                </h1>
+                <p class="text-gray-300 text-xl mb-8 max-w-2xl mx-auto font-['Tajawal']">
+                    شريكك القانوني الأول لتأسيس الشركات، الجنسية، والاستشارات القانونية المتخصصة.
+                </p>
+                <div class="flex flex-col md:flex-row justify-center gap-4">
+                    <a href="#contact-section"
+                        class="px-8 py-4 bg-yellow-500 text-black font-bold rounded-full hover:bg-yellow-400 transition transform hover:-translate-y-1 shadow-lg shadow-yellow-500/20">تواصل
+                        معنا الآن</a>
+                    <a href="#services-section"
+                        class="px-8 py-4 border border-gray-500 text-white font-bold rounded-full hover:border-yellow-500 hover:text-yellow-500 transition">خدماتنا</a>
+                </div>
+            </div>
+            <!-- Background Elements -->
+            <div class="absolute inset-0 bg-gradient-to-b from-blue-900/20 to-[#0a0a0a] -z-10"></div>
+            <!-- Floating Legal Icons Animation -->
+            <div class="absolute top-20 left-10 text-8xl text-yellow-500 opacity-20 animate-float-slow"><i
+                    class="fas fa-balance-scale"></i></div>
+            <div class="absolute bottom-40 right-10 text-9xl text-yellow-600 opacity-15 animate-float-slower"><i
+                    class="fas fa-gavel"></i></div>
+            <div class="absolute top-1/3 right-1/4 text-7xl text-yellow-500 opacity-10 animate-float"><i
+                    class="fas fa-university"></i></div>
+            <div class="absolute bottom-20 left-1/4 text-6xl text-yellow-600 opacity-15 animate-float-reverse"><i
+                    class="fas fa-file-contract"></i></div>
+        </section>
+
+        <!-- 2. Why Us Strip -->
+        <section class="py-12 border-y border-[var(--border-color)] bg-[var(--card-bg)]">
+            <div class="max-w-7xl mx-auto px-6">
+                <!-- Using grid for responsive layout of Why Us items -->
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-8 text-center">
+                    <div class="flex flex-col items-center group cursor-default">
+                        <i
+                            class="fas fa-folder-open text-yellow-500 text-3xl mb-3 group-hover:scale-110 transition"></i>
+                        <span class="text-white font-bold text-sm">إدارة كاملة للملف</span>
+                    </div>
+                    <div class="flex flex-col items-center group cursor-default">
+                        <i class="fas fa-users-cog text-yellow-500 text-3xl mb-3 group-hover:scale-110 transition"></i>
+                        <span class="text-white font-bold text-sm">فريق متخصص</span>
+                    </div>
+                    <div class="flex flex-col items-center group cursor-default">
+                        <i class="fas fa-eye text-yellow-500 text-3xl mb-3 group-hover:scale-110 transition"></i>
+                        <span class="text-white font-bold text-sm">متابعة دقيقة</span>
+                    </div>
+                    <div class="flex flex-col items-center group cursor-default">
+                        <i
+                            class="fas fa-user-shield text-yellow-500 text-3xl mb-3 group-hover:scale-110 transition"></i>
+                        <span class="text-white font-bold text-sm">سرية تامة</span>
+                    </div>
+                    <div class="flex flex-col items-center group cursor-default">
+                        <i class="fas fa-briefcase text-yellow-500 text-3xl mb-3 group-hover:scale-110 transition"></i>
+                        <span class="text-white font-bold text-sm">خبرة استثمارية</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. About Section -->
+        <section id="about" class="py-24 px-6 md:px-12 relative overflow-hidden">
+            <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+                <div class="relative" data-aos="fade-left">
+                    <!-- Abstract representation instead of image per user request for "Modern Corporate Legal" style without cartoons -->
+                    <div
+                        class="relative w-full aspect-[4/3] rounded-2xl overflow-hidden glass-card border border-gray-700 group">
+                        <img src="we.jpg" alt="About Elite Counsel Group"
+                            class="w-full h-full object-cover transform group-hover:scale-105 transition duration-700">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent">
+                        </div>
+                        <div class="absolute bottom-6 right-6 text-right">
+                            <h3 class="text-2xl font-bold text-white mb-1">Elite Counsel Group</h3>
+                        </div>
+                    </div>
+                </div>
+                <div data-aos="fade-right">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-8 text-white">من <span
+                            class="text-yellow-500">نحن؟</span></h2>
+                    <p id="about-text-content" class="text-gray-400 text-lg leading-relaxed mb-6 font-['Tajawal']">
+                        Elite Counsel Group شركة متخصصة في تقديم الحلول القانونية المتكاملة، تضم نخبة من المحامين
+                        والمستشارين في مختلف التخصصات القانونية، وتعمل على خدمة الأفراد والمستثمرين والشركات من خلال
+                        إدارة الملفات القانونية باحتراف من البداية للنهاية.
+                    </p>
+
+                    <div class="space-y-4 mb-8">
+                        <div>
+                            <h4 class="text-white font-bold mb-1">رؤيتنا</h4>
+                            <p class="text-gray-500 text-sm">أن نكون الشريك القانوني الموثوق لكل من يسعى لقرارات قانونية
+                                آمنة.</p>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold mb-1">رسالتنا</h4>
+                            <p class="text-gray-500 text-sm">تقديم خدمات قانونية دقيقة، شفافة، قائمة على الخبرة
+                                والالتزام.</p>
+                        </div>
+                    </div>
+
+                    <!-- Leadership Card -->
+                    <div class="glass-card p-6 rounded-xl border-r-4 border-yellow-500 flex items-center gap-6">
+                        <div class="text-right">
+                            <p class="text-white font-bold text-lg mb-1">بقيادة</p>
+                            <p class="text-yellow-500 font-bold text-xl mb-1">الدكتور محمد أبو شادي</p>
+                            <p class="text-gray-400 text-sm">وفريق قانوني متخصص في كل المجالات</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Dynamic Services Section -->
+        <section id="services-section" class="py-24 px-6 relative bg-[#0f0f0f]">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">خدماتنا <span
+                            class="text-yellow-500">القانونية</span></h2>
+                    <p class="text-gray-400 text-lg">حلول متكاملة لبدء وإدارة أعمالك</p>
+                    <div class="h-1 w-24 bg-yellow-500 mx-auto rounded-full mt-4"></div>
+                </div>
+
+                <!-- Services Grid (Populated by JS) -->
+                <div id="services-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Service Cards will be injected here via JS -->
+                    <p class="text-gray-500 col-span-4 text-center">جاري تحميل الخدمات...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dynamic Sections Container -->
+        <div id="dynamic-sections-container"></div>
+
+        <!-- 5. CTA Section -->
+        <section
+            class="py-24 px-6 relative bg-gradient-to-br from-[#0a0a0a] to-[#141414] border-y border-[var(--border-color)] text-center">
+            <div class="max-w-4xl mx-auto" data-aos="zoom-in">
+                <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">ابدأ صح… وخلي مستقبلك القانوني في أيد أمينة
+                </h2>
+                <a href="#contact-section"
+                    class="inline-block px-10 py-4 bg-yellow-500 text-black font-bold rounded-full hover:bg-yellow-400 transition shadow-lg shadow-yellow-500/20 text-lg">احجز
+                    استشارة</a>
+            </div>
+        </section>
+
+        <!-- 6. Contact Section -->
+        <section id="contact-section" class="py-24 px-6 bg-[#0a0a0a]">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-8">تواصل معنا</h2>
+                <div class="glass-card p-8 rounded-2xl">
+                    <form class="space-y-4" onsubmit="event.preventDefault(); sendToWhatsapp()">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <input id="contact-name" type="text" placeholder="الاسم"
+                                class="w-full p-4 bg-[#021024] border border-gray-700 rounded-lg text-white focus:border-yellow-500 outline-none">
+                            <input id="contact-phone" type="text" placeholder="رقم الهاتف"
+                                class="w-full p-4 bg-[#021024] border border-gray-700 rounded-lg text-white focus:border-yellow-500 outline-none">
+                        </div>
+                        <input id="contact-email" type="email" placeholder="البريد الإلكتروني"
+                            class="w-full p-4 bg-[#021024] border border-gray-700 rounded-lg text-white focus:border-yellow-500 outline-none">
+                        <textarea id="contact-msg" rows="4" placeholder="الرسالة..."
+                            class="w-full p-4 bg-[#021024] border border-gray-700 rounded-lg text-white focus:border-yellow-500 outline-none"></textarea>
+                        <button type="submit"
+                            class="w-full py-4 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400 transition">إرسال</button>
+                    </form>
+
+                    <div class="mt-8 flex justify-center gap-8 text-lg">
+                        <div class="flex items-center gap-2 text-gray-300">
+                            <i class="fas fa-phone text-yellow-500"></i> <span dir="ltr"
+                                class="contact-phone-display">01000545644</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-gray-300">
+                            <i class="fab fa-whatsapp text-green-500"></i> <span dir="ltr"
+                                class="contact-whatsapp-display">01000545644</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-center text-gray-400 text-sm contact-address-display">
+                        <!-- Address will be injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Footer -->
+        <footer class="bg-gradient-to-b from-[#0a0a0a] to-black border-t border-yellow-500/30 pt-16 pb-8 px-6">
+            <div class="max-w-7xl mx-auto text-center">
+                <div class="mb-8">
+                    <div class="text-3xl font-bold tracking-tighter flex items-center justify-center gap-2 mb-4">
+                        <i class="fas fa-balance-scale text-yellow-500"></i>
+                        <div><span class="text-white">Elite Counsel</span><span class="text-yellow-500"> Group</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-400" id="footer-about-text">حلول قانونية متكاملة</p>
+                    <div id="footer-social" class="flex justify-center gap-4 mt-6">
+                        <!-- Social Links Injected Here -->
+                    </div>
+                </div>
+
+                <div class="flex justify-center gap-6 mb-8 text-sm text-gray-300">
+                    <a href="javascript:router.navigate('home')" class="hover:text-yellow-500 transition">الرئيسية</a>
+                    <a href="#about" class="hover:text-yellow-500 transition">من نحن</a>
+                    <a href="#services-section" class="hover:text-yellow-500 transition">الخدمات</a>
+                    <a href="#contact-section" class="hover:text-yellow-500 transition">تواصل معنا</a>
+                </div>
+
+                <div class="border-t border-gray-800 pt-8">
+                    <p class="text-gray-600 text-sm">&copy; 2026 Elite Counsel Group – All Rights Reserved</p>
+                </div>
+            </div>
+        </footer>
     </div>
 
-    <!-- Hero Section -->
-    <section id="home" class="min-h-screen flex items-center justify-center relative px-6">
-        <div class="text-center z-10 max-w-5xl">
-            <p class="text-yellow-500 tracking-widest text-lg mb-4 font-bold" data-aos="fade-up" data-aos-delay="100">
-                شريكك القانوني الأول في تأسيس الأعمال</p>
-            <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight text-gold-gradient" data-aos="fade-up"
-                data-aos-delay="200">
-                ابدأ شركتك بثقة…<br>مع Elite Counsel Group
-            </h1>
-            <div class="h-auto md:h-20 mb-8 max-w-3xl mx-auto" data-aos="fade-up" data-aos-delay="300">
-                <p class="text-xl md:text-2xl text-[var(--text-secondary)] font-light font-['Tajawal'] leading-relaxed">
-                    نحن شركة متخصصة في تأسيس الشركات واستخراج التراخيص وتقديم الحلول القانونية المتكاملة. نرافقك من أول
-                    خطوة حتى الانطلاق الكامل لمشروعك.
-                </p>
-            </div>
+    <!-- VIEW: SERVICE DETAILS (Text Only) -->
+    <div id="view-service" class="view-section pt-24 pb-12 px-6 min-h-screen bg-[#021024]">
+        <div class="max-w-4xl mx-auto">
+            <button onclick="router.navigate('home')"
+                class="mb-8 text-gray-400 hover:text-white flex items-center gap-2 transition">
+                <i class="fas fa-arrow-right"></i> عودة للرئيسية
+            </button>
 
-            <div class="flex flex-col md:flex-row justify-center gap-4 mt-8" data-aos="fade-up" data-aos-delay="400">
-                <a href="#contact"
-                    class="px-8 py-4 bg-gradient-to-r from-yellow-600 to-yellow-400 text-black font-bold rounded-full shadow-lg hover:shadow-yellow-500/50 transition transform hover:-translate-y-1">
-                    تواصل معنا الآن
-                </a>
-                <a href="#services"
-                    class="px-8 py-4 border border-[var(--text-secondary)] text-[var(--text-main)] font-bold rounded-full hover:border-yellow-500 hover:text-yellow-500 transition transform hover:-translate-y-1">
-                    خدماتنا
-                </a>
-            </div>
-        </div>
+            <div class="glass-card p-8 md:p-12 rounded-2xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
+                    <i id="detail-bg-icon" class="fas fa-balance-scale text-9xl text-white"></i>
+                </div>
 
-        <!-- Decoration Circles -->
-        <div
-            class="absolute top-1/4 right-10 w-32 h-32 bg-yellow-500 rounded-full blur-[100px] opacity-20 animate-pulse">
-        </div>
-        <div class="absolute bottom-1/4 left-10 w-48 h-48 bg-blue-500 rounded-full blur-[120px] opacity-10"></div>
-    </section>
+                <h1 id="detail-title"
+                    class="text-3xl md:text-5xl font-bold text-white mb-8 border-b border-gray-700 pb-6"></h1>
 
-    <!-- Why Elite Counsel Group Strip -->
-    <section class="py-10 border-y border-[var(--border-color)] bg-[var(--card-bg)]">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex justify-center items-center gap-8 md:gap-16 flex-wrap text-center">
-                <div class="flex flex-col items-center">
-                    <i class="fas fa-check-circle text-yellow-500 text-2xl mb-2"></i>
-                    <span class="text-[var(--text-main)] font-bold">خبرة قانونية</span>
-                </div>
-                <div class="flex flex-col items-center">
-                    <i class="fas fa-hourglass-half text-yellow-500 text-2xl mb-2"></i>
-                    <span class="text-[var(--text-main)] font-bold">سرعة إنجاز</span>
-                </div>
-                <div class="flex flex-col items-center">
-                    <i class="fas fa-headset text-yellow-500 text-2xl mb-2"></i>
-                    <span class="text-[var(--text-main)] font-bold">دعم كامل</span>
-                </div>
-                <div class="flex flex-col items-center">
-                    <i class="fas fa-handshake text-yellow-500 text-2xl mb-2"></i>
-                    <span class="text-[var(--text-main)] font-bold">تعامل احترافي</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section with Leader Image -->
-    <section id="about" class="py-24 px-6 md:px-12 relative overflow-hidden">
-        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
-            <div class="relative" data-aos="fade-left">
-                <div class="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border border-gray-800 group">
-                    <img src="we.png" alt="Consulting meeting"
-                        class="w-full h-full object-cover transition duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80">
-                    </div>
-                </div>
-            </div>
-            <div data-aos="fade-right">
-                <h2 class="text-4xl md:text-5xl font-bold mb-8 text-[var(--text-main)]">من <span
-                        class="text-yellow-500">نحن؟</span></h2>
-                <h3 class="text-2xl text-[var(--text-secondary)] mb-4 font-['Tajawal']">Elite Counsel Group</h3>
-                <p class="text-gray-400 text-lg leading-relaxed mb-6 font-['Tajawal']">
-                    نحن مؤسسة استشارية رائدة متخصصة في تقديم حلول تأسيس الشركات والخدمات القانونية. رؤيتنا هي تبسيط
-                    الإجراءات المعقدة وتمكين رواد الأعمال من بدء مشاريعهم على أسس قانونية سليمة.
-                </p>
-
-                <!-- Updated Leadership Card with Refined Pop-out Effect -->
-                <div
-                    class="bg-[var(-    -card-bg)] p-8 rounded-2xl border-r-4 border-yellow-500 mb-6 flex flex-col md:flex-row items-center gap-8 group">
-                    <div class="relative w-32 h-32 flex-shrink-0">
-                        <!-- Background Circle (Lower half) -->
-                        <div
-                            class="absolute bottom-0 w-full h-3/4 bg-yellow-500/10 border-2 border-yellow-500 rounded-full transition-all duration-300 group-hover:bg-yellow-500/20">
-                        </div>
-                        <!-- Pop-out Image (Half out from top) -->
-                        <img src="person.png" alt="الدكتور محمد أبو شادي"
-                            class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[120%] h-auto max-h-[140%] object-contain drop-shadow-2xl transition-transform duration-300 group-hover:translate-y-[-5%] group-hover:scale-110">
-                    </div>
+                <div class="space-y-8">
                     <div>
-                        <p class="text-[var(--text-main)] font-bold text-xl mb-1">قيادة خبيرة</p>
-                        <p class="text-yellow-500 font-bold mb-3">الدكتور محمد أبو شادي</p>
-                        <p class="text-gray-400 text-sm leading-relaxed">نقدم خبرة حقيقية ودعم مستمر لضمان بداية قوية
-                            ومستقرة لكل عميل.</p>
+                        <h3 class="text-xl font-bold text-yellow-500 mb-4">عن الخدمة</h3>
+                        <p id="detail-description" class="text-gray-300 leading-loose text-lg font-['Tajawal']"></p>
+                    </div>
+
+                    <div id="steps-container">
+                        <h3 class="text-xl font-bold text-yellow-500 mb-4">خطوات العمل</h3>
+                        <ul id="detail-steps" class="space-y-4"></ul>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-6">
-                    <div class="flex items-center gap-3"><i class="fas fa-building text-yellow-500"></i><span
-                            class="text-gray-300">تأسيس شركات</span></div>
-                    <div class="flex items-center gap-3"><i class="fas fa-file-contract text-yellow-500"></i><span
-                            class="text-gray-300">عقود وتراخيص</span></div>
+                <div class="mt-12 pt-8 border-t border-gray-700 text-center">
+                    <a href="https://wa.me/201000545644" target="_blank"
+                        class="inline-block px-8 py-3 bg-green-600 text-white font-bold rounded-lg hover:bg-green-500 transition"><i
+                            class="fab fa-whatsapp ml-2"></i> تواصل بشأن هذه الخدمة</a>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Services Section -->
-    <section id="services" class="py-24 relative">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-20" data-aos="fade-up">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4 text-[var(--text-main)]">خدماتنا <span
-                        class="text-yellow-500">القانونية</span></h2>
-                <p class="text-gray-400 text-lg">حلول متكاملة لبدء وإدارة أعمالك</p>
-                <div class="h-1 w-24 bg-yellow-500 mx-auto rounded-full mt-4"></div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Service 1 -->
-                <div class="glass-card p-8 rounded-2xl text-center group" data-aos="fade-up" data-aos-delay="100">
-                    <div
-                        class="w-20 h-20 mx-auto bg-[var(--card-bg)] border border-[var(--border-color)] rounded-full flex items-center justify-center mb-6 group-hover:bg-yellow-500 transition-colors duration-300">
-                        <i class="fas fa-city text-3xl text-yellow-500 group-hover:text-black"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 text-[var(--text-main)]">تأسيس الشركات</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">تأسيس جميع أنواع الشركات (أفراد، مساهمة، ذات
-                        مسؤولية محدودة) وإنهاء كافة الإجراءات.</p>
-                </div>
-                <!-- Service 2 -->
-                <div class="glass-card p-8 rounded-2xl text-center group" data-aos="fade-up" data-aos-delay="200">
-                    <div
-                        class="w-20 h-20 mx-auto bg-[var(--card-bg)] border border-[var(--border-color)] rounded-full flex items-center justify-center mb-6 group-hover:bg-yellow-500 transition-colors duration-300">
-                        <i class="fas fa-stamp text-3xl text-yellow-500 group-hover:text-black"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 text-[var(--text-main)]">استخراج التراخيص</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">استخراج السجل التجاري، البطاقة الضريبية، وتراخيص
-                        مزاولة النشاط بكل سهولة.</p>
-                </div>
-                <!-- Service 3 -->
-                <div class="glass-card p-8 rounded-2xl text-center group" data-aos="fade-up" data-aos-delay="300">
-                    <div
-                        class="w-20 h-20 mx-auto bg-[var(--card-bg)] border border-[var(--border-color)] rounded-full flex items-center justify-center mb-6 group-hover:bg-yellow-500 transition-colors duration-300">
-                        <i class="fas fa-gavel text-3xl text-yellow-500 group-hover:text-black"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 text-[var(--text-main)]">استشارات قانونية</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">تقديم المشورة القانونية في صياغة العقود وحل
-                        النزاعات وقوانين العمل.</p>
-                </div>
-                <!-- Service 4 -->
-                <div class="glass-card p-8 rounded-2xl text-center group" data-aos="fade-up" data-aos-delay="400">
-                    <div
-                        class="w-20 h-20 mx-auto bg-[var(--card-bg)] border border-[var(--border-color)] rounded-full flex items-center justify-center mb-6 group-hover:bg-yellow-500 transition-colors duration-300">
-                        <i class="fas fa-tasks text-3xl text-yellow-500 group-hover:text-black"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-3 text-[var(--text-main)]">متابعة الإجراءات</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">نتولى عنك التعامل مع الجهات الحكومية ومتابعة
-                        الملفات حتى الاستلام النهائي.</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- Static Modals -->
+    <!-- (Optional: keeping these if needed, though not explicitly requested in new prompt) -->
 
-    <!-- Why Us (Detailed) -->
-    <section id="why-us" class="py-24 px-6 relative bg-[var(--dark-bg)]">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16" data-aos="fade-up">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4 text-[var(--text-main)]">لماذا <span
-                        class="text-yellow-500">Elite Counsel Group؟</span></h2>
-                <p class="text-gray-400">نحن لا نقدم خدمة فقط، بل نقدم راحة البال</p>
-            </div>
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="flex items-start gap-6 p-6 rounded-xl border border-[var(--border-color)] hover:border-yellow-500 transition duration-300"
-                    data-aos="fade-right">
-                    <div class="text-yellow-500 text-4xl mt-2"><i class="fas fa-star"></i></div>
-                    <div>
-                        <h3 class="text-2xl font-bold text-[var(--text-main)] mb-2">خبرة واسعة</h3>
-                        <p class="text-gray-400">فريقنا يمتلك سنوات من الخبرة في القانون التجاري وإجراءات التأسيس في
-                            مصر.</p>
-                    </div>
-                </div>
-                <div class="flex items-start gap-6 p-6 rounded-xl border border-[var(--border-color)] hover:border-yellow-500 transition duration-300"
-                    data-aos="fade-left">
-                    <div class="text-yellow-500 text-4xl mt-2"><i class="fas fa-bolt"></i></div>
-                    <div>
-                        <h3 class="text-2xl font-bold text-[var(--text-main)] mb-2">سرعة الإنجاز</h3>
-                        <p class="text-gray-400">نعرف أقصر الطرق القانونية لإنهاء معاملاتك في وقت قياسي دون تعقيدات.</p>
-                    </div>
-                </div>
-                <div class="flex items-start gap-6 p-6 rounded-xl border border-[var(--border-color)] hover:border-yellow-500 transition duration-300"
-                    data-aos="fade-right">
-                    <div class="text-yellow-500 text-4xl mt-2"><i class="fas fa-shield-alt"></i></div>
-                    <div>
-                        <h3 class="text-2xl font-bold text-[var(--text-main)] mb-2">دعم كامل</h3>
-                        <p class="text-gray-400">لا نتركك بعد التأسيس، نقدم استشارات مستمرة لضمان استقرار وضعك القانوني.
-                        </p>
-                    </div>
-                </div>
-                <div class="flex items-start gap-6 p-6 rounded-xl border border-[var(--border-color)] hover:border-yellow-500 transition duration-300"
-                    data-aos="fade-left">
-                    <div class="text-yellow-500 text-4xl mt-2"><i class="fas fa-user-tie"></i></div>
-                    <div>
-                        <h3 class="text-2xl font-bold text-[var(--text-main)] mb-2">تعامل احترافي</h3>
-                        <p class="text-gray-400">الشفافية والمصداقية هما أساس تعاملنا مع جميع عملائنا.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- NEW SECTION: Achievements & Stats (Replaces Calculator) -->
-    <section id="stats"
-        class="py-24 px-6 relative bg-gradient-to-br from-[var(--dark-bg)] to-[var(--dark-card)] border-y border-[var(--border-color)]">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16" data-aos="fade-up">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4 text-[var(--text-main)]">أرقام <span
-                        class="text-yellow-500">تتحدث عنا</span></h2>
-                <p class="text-gray-400">ثقة عملائنا هي أكبر دليل على نجاحنا</p>
-            </div>
-
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-                <!-- Stat 1 -->
-                <div class="text-center p-6 border border-[var(--border-color)] rounded-xl bg-[var(--card-bg)] hover:border-yellow-500 transition duration-300"
-                    data-aos="zoom-in" data-aos-delay="100">
-                    <div class="text-4xl text-yellow-500 mb-2"><i class="fas fa-users"></i></div>
-                    <div class="text-4xl font-bold text-[var(--text-main)] mb-2">500+</div>
-                    <div class="text-gray-400 text-sm">عميل راضٍ</div>
-                </div>
-                <!-- Stat 2 -->
-                <div class="text-center p-6 border border-[var(--border-color)] rounded-xl bg-[var(--card-bg)] hover:border-yellow-500 transition duration-300"
-                    data-aos="zoom-in" data-aos-delay="200">
-                    <div class="text-4xl text-yellow-500 mb-2"><i class="fas fa-building"></i></div>
-                    <div class="text-4xl font-bold text-[var(--text-main)] mb-2">350+</div>
-                    <div class="text-gray-400 text-sm">شركة تم تأسيسها</div>
-                </div>
-                <!-- Stat 3 -->
-                <div class="text-center p-6 border border-[var(--border-color)] rounded-xl bg-[var(--card-bg)] hover:border-yellow-500 transition duration-300"
-                    data-aos="zoom-in" data-aos-delay="300">
-                    <div class="text-4xl text-yellow-500 mb-2"><i class="fas fa-calendar-alt"></i></div>
-                    <div class="text-4xl font-bold text-[var(--text-main)] mb-2">10+</div>
-                    <div class="text-gray-400 text-sm">سنوات خبرة</div>
-                </div>
-                <!-- Stat 4 -->
-                <div class="text-center p-6 border border-[var(--border-color)] rounded-xl bg-[var(--card-bg)] hover:border-yellow-500 transition duration-300"
-                    data-aos="zoom-in" data-aos-delay="400">
-                    <div class="text-4xl text-yellow-500 mb-2"><i class="fas fa-file-contract"></i></div>
-                    <div class="text-4xl font-bold text-[var(--text-main)] mb-2">1000+</div>
-                    <div class="text-gray-400 text-sm">استشارة قانونية</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials Section -->
-    <section id="testimonials" class="py-24 px-6 bg-[var(--dark-bg)]">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16" data-aos="fade-up">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4 text-[var(--text-main)]">آراء <span
-                        class="text-yellow-500">عملائنا</span></h2>
-                <p class="text-gray-400">شركاء النجاح الذين وثقوا بنا</p>
-            </div>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="glass-card p-8 rounded-2xl relative" data-aos="fade-up" data-aos-delay="100">
-                    <i class="fas fa-quote-right text-4xl text-yellow-500/20 absolute top-6 right-6"></i>
-                    <p class="text-gray-400 mb-6 italic text-sm leading-loose">"الدكتور محمد أبو شادي قمة في الاحترام
-                        والمهنية. خلصوا إجراءات تأسيس شركتي في وقت قياسي وبدون أي تعب مني."</p>
-                    <div class="flex items-center gap-4 border-t border-[var(--border-color)] pt-4">
-                        <div
-                            class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center text-xl text-white font-bold">
-                            ع</div>
-                        <div>
-                            <h4 class="font-bold text-[var(--text-main)] text-sm">علي حسن</h4>
-                            <p class="text-xs text-gray-500">صاحب شركة مقاولات</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="glass-card p-8 rounded-2xl relative" data-aos="fade-up" data-aos-delay="200">
-                    <i class="fas fa-quote-right text-4xl text-yellow-500/20 absolute top-6 right-6"></i>
-                    <p class="text-gray-400 mb-6 italic text-sm leading-loose">"كنت تايه في الأوراق والتراخيص، Elite
-                        Counsel Group تولوا الموضوع من الألف للياء. شكراً لكم."</p>
-                    <div class="flex items-center gap-4 border-t border-[var(--border-color)] pt-4">
-                        <div
-                            class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center text-xl text-white font-bold">
-                            م</div>
-                        <div>
-                            <h4 class="font-bold text-[var(--text-main)] text-sm">منى السيد</h4>
-                            <p class="text-xs text-gray-500">مؤسسة براند ملابس</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="glass-card p-8 rounded-2xl relative" data-aos="fade-up" data-aos-delay="300">
-                    <i class="fas fa-quote-right text-4xl text-yellow-500/20 absolute top-6 right-6"></i>
-                    <p class="text-gray-400 mb-6 italic text-sm leading-loose">"استشارات قانونية في محلها. وفروا عليّ
-                        غرامات ومشاكل كنت ممكن أقع فيها لولا توجيهاتهم."</p>
-                    <div class="flex items-center gap-4 border-t border-[var(--border-color)] pt-4">
-                        <div
-                            class="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center text-xl text-white font-bold">
-                            أ</div>
-                        <div>
-                            <h4 class="font-bold text-[var(--text-main)] text-sm">أحمد كمال</h4>
-                            <p class="text-xs text-gray-500">مدير شركة استيراد</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Process Section -->
-    <section class="py-24 relative bg-[var(--card-bg)]">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-5xl font-bold mb-4 text-[var(--text-main)]">رحلة <span
-                        class="text-yellow-500">التأسيس</span></h2>
-                <p class="text-gray-400">خطوات بسيطة ومدروسة</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
-                <div data-aos="fade-up" data-aos-delay="100">
-                    <div
-                        class="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4 text-black text-2xl font-bold">
-                        1</div>
-                    <h3 class="text-xl font-bold text-[var(--text-main)]">استشارة أولية</h3>
-                    <p class="text-gray-400 text-sm mt-2">تحديد نوع الشركة الأنسب لنشاطك.</p>
-                </div>
-                <div data-aos="fade-up" data-aos-delay="200">
-                    <div
-                        class="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4 text-black text-2xl font-bold">
-                        2</div>
-                    <h3 class="text-xl font-bold text-[var(--text-main)]">تجهيز الأوراق</h3>
-                    <p class="text-gray-400 text-sm mt-2">جمع المستندات وصياغة العقود.</p>
-                </div>
-                <div data-aos="fade-up" data-aos-delay="300">
-                    <div
-                        class="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4 text-black text-2xl font-bold">
-                        3</div>
-                    <h3 class="text-xl font-bold text-[var(--text-main)]">الإجراءات الحكومية</h3>
-                    <p class="text-gray-400 text-sm mt-2">استخراج السجل والبطاقة والتراخيص.</p>
-                </div>
-                <div data-aos="fade-up" data-aos-delay="400">
-                    <div
-                        class="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4 text-black text-2xl font-bold">
-                        4</div>
-                    <h3 class="text-xl font-bold text-[var(--text-main)]">استلام الشركة</h3>
-                    <p class="text-gray-400 text-sm mt-2">نسلمك ملف الشركة كاملاً لبدء العمل.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="py-24 px-6 relative">
-        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/80 pointer-events-none"></div>
-        <div class="max-w-4xl mx-auto text-center relative z-10">
-            <h2 class="text-4xl md:text-5xl font-bold mb-6 text-[var(--text-main)]" data-aos="fade-up">هل أنت جاهز
-                للانطلاق؟</h2>
-            <p class="text-gray-400 mb-12 text-lg">دعنا نتولى الأمور القانونية، وركز أنت على نجاح مشروعك.</p>
-
-            <div class="flex flex-col md:flex-row justify-center gap-6 mb-12" data-aos="fade-up" data-aos-delay="150">
-                <a href="https://wa.me/201000545644" target="_blank"
-                    class="flex items-center justify-center gap-3 px-8 py-4 bg-green-600 text-white font-bold rounded-lg hover:bg-green-500 transition transform hover:-translate-y-1">
-                    <i class="fab fa-whatsapp text-2xl"></i>
-                    تواصل عبر واتساب
-                </a>
-                <a href="mailto:info@elitecounsel.com"
-                    class="flex items-center justify-center gap-3 px-8 py-4 bg-gray-800 border border-gray-700 text-white font-bold rounded-lg hover:border-yellow-500 transition transform hover:-translate-y-1">
-                    <i class="fas fa-envelope text-2xl"></i>
-                    أرسل بريد إلكتروني
-                </a>
-            </div>
-
-            <form class="max-w-xl mx-auto space-y-4 text-right" data-aos="fade-up" data-aos-delay="200"
-                onsubmit="event.preventDefault(); sendToWhatsapp();">
-                <div class="grid md:grid-cols-2 gap-4">
-                    <input id="contact-name" type="text" placeholder="الاسم"
-                        class="w-full p-4 bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg focus:outline-none focus:border-yellow-500 text-[var(--text-main)] transition"
-                        required>
-                    <input id="contact-phone" type="text" placeholder="رقم الهاتف"
-                        class="w-full p-4 bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg focus:outline-none focus:border-yellow-500 text-[var(--text-main)] transition"
-                        required>
-                </div>
-                <textarea id="contact-details" rows="5" placeholder="تفاصيل استشارتك..."
-                    class="w-full p-4 bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg focus:outline-none focus:border-yellow-500 text-[var(--text-main)] transition"
-                    required></textarea>
-                <button type="submit"
-                    class="w-full py-4 bg-yellow-500 text-black font-bold rounded-lg hover:bg-yellow-400 transition transform hover:-translate-y-1">إرسال
-                    الرسالة</button>
-            </form>
-        </div>
-    </section>
-
-    <!-- Luxurious Mega Footer -->
-    <footer
-        class="bg-gradient-to-b from-[#0a0a0a] to-black border-t border-yellow-500/30 pt-20 pb-10 px-6 relative overflow-hidden">
-        <!-- Glow Effect -->
-        <div
-            class="absolute top-0 left-1/2 transform -translate-x-1/2 w-full max-w-3xl h-1 bg-gradient-to-r from-transparent via-yellow-500 to-transparent shadow-[0_0_50px_rgba(212,175,55,0.5)]">
-        </div>
-
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 relative z-10">
-            <!-- Brand Column -->
-            <div class="space-y-6">
-                <div class="text-3xl font-bold tracking-tighter flex items-center gap-2">
-                    <div class="w-10 h-10 bg-yellow-500 rounded-lg flex items-center justify-center text-black text-xl">
-                        <i class="fas fa-balance-scale"></i>
-                    </div>
-                    <div><span class="text-white">Elite Counsel</span><span class="text-yellow-500">.</span></div>
-                </div>
-                <p class="text-gray-400 text-sm leading-relaxed">
-                    مؤسسة قانونية رائدة، نلتزم بتقديم أعلى معايير الجودة في الخدمات القانونية وتأسيس الشركات لعملائنا.
-                </p>
-                <div class="flex gap-4">
-                    <a href="https://www.facebook.com/profile.php?id=61585980553102" target="_blank"
-                        class="w-10 h-10 rounded-full border border-gray-700 flex items-center justify-center text-gray-400 hover:bg-yellow-500 hover:text-black hover:border-yellow-500 transition-all duration-300 transform hover:-translate-y-1"><i
-                            class="fab fa-facebook-f"></i></a>
-                    <a href="#"
-                        class="w-10 h-10 rounded-full border border-gray-700 flex items-center justify-center text-gray-400 hover:bg-yellow-500 hover:text-black hover:border-yellow-500 transition-all duration-300 transform hover:-translate-y-1"><i
-                            class="fab fa-twitter"></i></a>
-                    <a href="#"
-                        class="w-10 h-10 rounded-full border border-gray-700 flex items-center justify-center text-gray-400 hover:bg-yellow-500 hover:text-black hover:border-yellow-500 transition-all duration-300 transform hover:-translate-y-1"><i
-                            class="fab fa-linkedin-in"></i></a>
-                </div>
-            </div>
-
-            <!-- Links Column -->
-            <div>
-                <h4 class="text-white font-bold text-lg mb-8 relative inline-block">روابط هامة <span
-                        class="absolute -bottom-2 right-0 w-1/2 h-1 bg-yellow-500 rounded-full"></span></h4>
-                <ul class="space-y-4 text-gray-400 text-sm">
-                    <li><a href="#about" class="hover:text-yellow-500 transition flex items-center gap-2"><i
-                                class="fas fa-chevron-left text-xs text-yellow-500"></i> من نحن</a></li>
-                    <li><a href="#services" class="hover:text-yellow-500 transition flex items-center gap-2"><i
-                                class="fas fa-chevron-left text-xs text-yellow-500"></i> خدماتنا</a></li>
-                    <li><a href="#stats" class="hover:text-yellow-500 transition flex items-center gap-2"><i
-                                class="fas fa-chevron-left text-xs text-yellow-500"></i> إنجازاتنا</a></li>
-                    <li><a href="#contact" class="hover:text-yellow-500 transition flex items-center gap-2"><i
-                                class="fas fa-chevron-left text-xs text-yellow-500"></i> تواصل معنا</a></li>
-                </ul>
-            </div>
-
-            <!-- Contact Column -->
-            <div>
-                <h4 class="text-white font-bold text-lg mb-8 relative inline-block">تواصل معنا <span
-                        class="absolute -bottom-2 right-0 w-1/2 h-1 bg-yellow-500 rounded-full"></span></h4>
-                <ul class="space-y-6 text-gray-400 text-sm">
-                    <li class="flex items-start gap-4">
-                        <div class="mt-1 text-yellow-500"><i class="fas fa-map-marker-alt"></i></div>
-                        <span>برج النخبة، شارع التسعين، التجمع الخامس، القاهرة</span>
-                    </li>
-                    <li class="flex items-center gap-4">
-                        <div class="text-yellow-500"><i class="fas fa-phone-alt"></i></div>
-                        <span class="font-['Tajawal']" dir="ltr">01000545644</span>
-                    </li>
-                    <li class="flex items-center gap-4">
-                        <div class="text-yellow-500"><i class="fas fa-envelope"></i></div>
-                        <span>info@elitecounsel.com</span>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Newsletter Column -->
-            <div>
-                <h4 class="text-white font-bold text-lg mb-8 relative inline-block">اشترك معنا <span
-                        class="absolute -bottom-2 right-0 w-1/2 h-1 bg-yellow-500 rounded-full"></span></h4>
-                <p class="text-gray-500 text-sm mb-6">احصل على آخر التحديثات القانونية وعروض التأسيس.</p>
-                <form class="flex flex-col gap-3">
-                    <div class="relative">
-                        <input type="email" placeholder="بريدك الإلكتروني"
-                            class="w-full bg-[#1a1a1a] border border-gray-800 text-white px-4 py-4 rounded-lg focus:outline-none focus:border-yellow-500 transition pl-10">
-                        <i class="fas fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-600"></i>
-                    </div>
-                    <button
-                        class="w-full bg-gradient-to-r from-yellow-600 to-yellow-500 text-black font-bold py-4 rounded-lg hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] transition transform hover:-translate-y-1">اشترك
-                        الآن</button>
-                </form>
-            </div>
-        </div>
-
-        <div
-            class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 max-w-7xl mx-auto relative z-10">
-            <p class="text-gray-600 text-sm">&copy; 2026 Elite Counsel Group. جميع الحقوق محفوظة.</p>
-            <div class="flex gap-6 text-gray-600 text-sm">
-                <a href="javascript:openStaticModal('terms-modal')"
-                    class="hover:text-yellow-500 transition cursor-pointer">الشروط والأحكام</a>
-                <a href="javascript:openStaticModal('privacy-modal')"
-                    class="hover:text-yellow-500 transition cursor-pointer">سياسة الخصوصية</a>
-            </div>
-        </div>
-    </footer>
-
-    <!-- AOS Script -->
+    <!-- Scripts -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-
+    <script src="firebase-config.js"></script> <!-- Firebase Config -->
     <script>
-        // Initialize AOS
-        AOS.init({ duration: 1000, once: true, offset: 100 });
+        AOS.init();
 
-        // Theme Toggle
-        const themeBtn = document.getElementById('theme-toggle');
-        const themeIcon = themeBtn.querySelector('i');
-        const body = document.body;
-        if (localStorage.getItem('theme') === 'light') {
-            body.classList.add('light-mode');
-            themeIcon.classList.remove('fa-moon');
-            themeIcon.classList.add('fa-sun');
-        }
-        themeBtn.addEventListener('click', () => {
-            body.classList.toggle('light-mode');
-            if (body.classList.contains('light-mode')) {
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-                localStorage.setItem('theme', 'light');
-            } else {
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-                localStorage.setItem('theme', 'dark');
-            }
-        });
+        // --- AUTH ---
+        let servicesData = [];
+        let currentUser = null;
 
-        // Navbar Scroll
-        window.addEventListener('scroll', function () {
-            const nav = document.getElementById('navbar');
-            if (window.scrollY > 50) { nav.classList.add('scrolled'); }
-            else { nav.classList.remove('scrolled'); }
-        });
-
-        // Mobile Menu
-        const menuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const closeMenu = document.getElementById('close-menu');
-        const mobileLinks = mobileMenu.querySelectorAll('a');
-        function toggleMenu() { mobileMenu.classList.toggle('translate-x-full'); }
-        menuBtn.addEventListener('click', toggleMenu);
-        closeMenu.addEventListener('click', toggleMenu);
-        mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
-
-        // Custom Cursor
-        const cursorDot = document.querySelector('.cursor-dot');
-        const cursorOutline = document.querySelector('.cursor-outline');
-        window.addEventListener('mousemove', (e) => {
-            const posX = e.clientX; const posY = e.clientY;
-            cursorDot.style.left = `${posX}px`; cursorDot.style.top = `${posY}px`;
-            cursorOutline.animate({ left: `${posX}px`, top: `${posY}px` }, { duration: 500, fill: "forwards" });
-        });
-
-        // Smart Merge Background: Original Network + Fixed Legal Icons
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
-        let particlesArray;
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-
-        // Functional Draw for Static Background Icons (Scales)
-        function drawStaticScales(ctx, x, y, size) {
-            ctx.save();
-            ctx.translate(x, y);
-            ctx.strokeStyle = 'rgba(212, 175, 55, 0.08)'; // Very low opacity
-            ctx.lineWidth = size / 10;
-            ctx.beginPath();
-            // Base & Pillar
-            ctx.moveTo(-size, size); ctx.lineTo(size, size);
-            ctx.moveTo(0, size); ctx.lineTo(0, -size);
-            // Beam
-            ctx.moveTo(-size, -size * 0.6); ctx.lineTo(size, -size * 0.6);
-            // Scales
-            ctx.moveTo(-size, -size * 0.6); ctx.lineTo(-size * 1.3, size * 0.4);
-            ctx.moveTo(-size, -size * 0.6); ctx.lineTo(-size * 0.7, size * 0.4);
-            ctx.moveTo(size, -size * 0.6); ctx.lineTo(size * 1.3, size * 0.4);
-            ctx.moveTo(size, -size * 0.6); ctx.lineTo(size * 0.7, size * 0.4);
-            ctx.stroke();
-            ctx.restore();
-        }
-
-        class Particle {
-            constructor(x, y, directionX, directionY, size, color) {
-                this.x = x; this.y = y; this.directionX = directionX; this.directionY = directionY;
-                this.size = size; this.color = color;
-            }
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-                ctx.fillStyle = this.color;
-                ctx.fill();
-            }
-            update() {
-                if (this.x > canvas.width || this.x < 0) { this.directionX = -this.directionX; }
-                if (this.y > canvas.height || this.y < 0) { this.directionY = -this.directionY; }
-                this.x += this.directionX; this.y += this.directionY;
-                this.draw();
-            }
-        }
-
-        function initParticles() {
-            particlesArray = [];
-            let numberOfParticles = (canvas.height * canvas.width) / 15000;
-            for (let i = 0; i < numberOfParticles; i++) {
-                let size = (Math.random() * 2) + 1;
-                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
-                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
-                let directionX = (Math.random() * 0.3) - 0.15;
-                let directionY = (Math.random() * 0.3) - 0.15;
-                let color = 'rgba(212, 175, 55, 0.5)';
-                particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
-            }
-        }
-
-        function animateParticles() {
-            requestAnimationFrame(animateParticles);
-            ctx.clearRect(0, 0, innerWidth, innerHeight);
-
-            // Draw static background icons
-            drawStaticScales(ctx, canvas.width * 0.85, canvas.height * 0.2, 120);
-            drawStaticScales(ctx, canvas.width * 0.15, canvas.height * 0.8, 150);
-
-            for (let i = 0; i < particlesArray.length; i++) {
-                particlesArray[i].update();
-            }
-            connect();
-        }
-
-        function connect() {
-            let opacityValue = 1;
-            for (let a = 0; a < particlesArray.length; a++) {
-                for (let b = a; b < particlesArray.length; b++) {
-                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
-                    if (distance < (canvas.width / 7) * (canvas.height / 7)) {
-                        opacityValue = 1 - (distance / 20000);
-                        ctx.strokeStyle = 'rgba(212, 175, 55,' + (opacityValue * 0.15) + ')';
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-                        ctx.stroke();
-                    }
+        const initAuth = async () => {
+            try { await auth.signInAnonymously(); } catch (error) { loadServices(); loadSections(); loadSettings(); }
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    currentUser = user;
+                    loadServices();
+                    loadSections();
+                    loadSettings();
                 }
-            }
-        }
-        window.addEventListener('resize', () => {
-            canvas.width = innerWidth;
-            canvas.height = innerHeight;
-            initParticles();
-        });
-        initParticles();
-        animateParticles();
-
-        // Project Modal
-        const projectModal = document.getElementById('project-modal');
-        const modalImg = document.getElementById('modal-img');
-        const modalTitle = document.getElementById('modal-title');
-        const modalCategory = document.getElementById('modal-category');
-        const modalDesc = document.getElementById('modal-desc');
-        const modalTags = document.getElementById('modal-tags');
-        const closeModalBtn = document.getElementById('close-modal');
-        function openModal(title, category, desc, img, tags) {
-            modalTitle.innerText = title; modalCategory.innerText = category; modalDesc.innerText = desc; modalImg.src = img;
-            modalTags.innerHTML = '';
-            tags.forEach(tag => {
-                const span = document.createElement('span');
-                span.className = 'bg-gray-800 text-yellow-500 px-3 py-1 rounded text-xs font-bold';
-                span.innerText = tag;
-                modalTags.appendChild(span);
             });
-            projectModal.classList.remove('hidden'); // Ensure it's not hidden
-            projectModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeModal() {
-            projectModal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-        closeModalBtn.addEventListener('click', closeModal);
-        projectModal.addEventListener('click', (e) => { if (e.target === projectModal) closeModal(); });
+        };
 
-        // Generic Static Modal Logic (For Terms & Privacy)
-        function openStaticModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.remove('hidden'); // Remove hidden class if present
-                modal.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
-        }
+        // --- DATA ---
+        const loadServices = () => {
+            const loader = document.getElementById('loader');
+            db.collection('services').orderBy('order', 'asc')
+                .onSnapshot(snapshot => {
+                    servicesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    // Force re-seed based on new requirement if needed or if empty
+                    if (currentUser && servicesData.length === 0 && !localStorage.getItem('seeded_v2')) { seedInitialData(); }
+                    renderServicesGrid();
+                    loader.style.display = 'none';
+                }, error => { loader.style.display = 'none'; });
+        };
 
-        function closeStaticModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.remove('active');
-                setTimeout(() => {
-                    modal.classList.add('hidden'); // Add hidden back after animation if needed, or just rely on opacity
-                }, 300);
-                document.body.style.overflow = 'auto';
-            }
-        }
+        const seedInitialData = async () => {
+            if (!currentUser) return;
+            // 8 Specific Services
+            const initialServices = [
+                {
+                    title: 'الجنسية المصرية للأجانب',
+                    desc: 'إدارة كاملة لملف الجنسية حتى صدور القرار النهائي.',
+                    fullDesc: 'نقدم خدمة متكاملة للأجانب الراغبين في الحصول على الجنسية المصرية، سواء عن طريق الاستثمار أو طرق أخرى، مع متابعة دقيقة لكافة الإجراءات القانونية والأمنية.',
+                    icon: 'fas fa-passport',
+                    steps: ['تقديم الطلب', 'متابعة الجهات المعنية', 'استلام القرار'],
+                    order: 1
+                },
+                {
+                    title: 'الإقامة الاستثمارية',
+                    desc: 'استخراج وتجديد إقامة المستثمر وربطها بتأسيس كيان قانوني.',
+                    fullDesc: 'نساعد المستثمرين في الحصول على الإقامات الاستثمارية من خلال هيئة الاستثمار، ونقوم بكافة الخطوات لتأسيس الكيان القانوني اللازم للحصول عليها.',
+                    icon: 'fas fa-id-card-alt',
+                    steps: ['تأسيس الشركة', 'تقديم ملف الإقامة', 'استلام البطاقة'],
+                    order: 2
+                },
+                {
+                    title: 'تأسيس الشركات والقانون التجاري',
+                    desc: 'تأسيس – تراخيص – ضرائب – تأمينات – عقود.',
+                    fullDesc: 'خدمة شاملة لتأسيس جميع أنواع الشركات (أموال، أشخاص، فردية) وإنهاء كافة إجراءات التراخيص والسجل التجاري والبطاقة الضريبية.',
+                    icon: 'fas fa-building',
+                    steps: ['المشورة القانونية', 'توثيق العقود', 'استخراج التراخيص'],
+                    order: 3
+                },
+                {
+                    title: 'القضايا المدنية والتعويضات',
+                    desc: 'نزاعات – مطالبات مالية – قضايا عقارية – تعويضات.',
+                    fullDesc: 'تمثيل قانوني قوي في كافة القضايا المدنية، بما في ذلك نزاعات العقود، المطالبات المالية، وقضايا التعويضات بمختلف أنواعها.',
+                    icon: 'fas fa-gavel',
+                    steps: ['دراسة الملف', 'رفع الدعوى', 'الترافع والتنفيذ'],
+                    order: 4
+                },
+                {
+                    title: 'القضايا الجنائية',
+                    desc: 'الدفاع في الجنايات والجنح وتحليل الأدلة.',
+                    fullDesc: 'دفاع متخصص في القضايا الجنائية، مع فريق خبير في تحليل الأدلة والمرافعات لضمان أفضل موقف قانوني للموكل.',
+                    icon: 'fas fa-handcuffs',
+                    steps: ['حضور التحقيقات', 'دراسة القضية', 'المرافعة أمام المحكمة'],
+                    order: 5
+                },
+                {
+                    title: 'قضايا مجلس الدولة والقضاء الإداري',
+                    desc: 'طعون – حقوق وظيفية – معاشات – تعويضات.',
+                    fullDesc: 'رفع الطعون أمام مجلس الدولة لاسترداد الحقوق الوظيفية، تسوية المعاشات، والمطالبة بالتعويضات من الجهات الإدارية.',
+                    icon: 'fas fa-university',
+                    steps: ['تقديم التظلم', 'رفع الدعوى', 'متابعة الحكم'],
+                    order: 6
+                },
+                {
+                    title: 'قضايا الأسرة والزواج',
+                    desc: 'طلاق – نفقة – حضانة – رؤية – نسب.',
+                    fullDesc: 'معالجة قضايا الأسرة بخصوصية تامة، تشمل الطلاق، الخلع، النفقات، الحضانة، وإثبات النسب، مع مراعاة الجوانب الإنسانية.',
+                    icon: 'fas fa-users',
+                    steps: ['محاولة الصلح', 'رفع الدعوى', 'تنفيذ الحكم'],
+                    order: 7
+                },
+                {
+                    title: 'التحكيم التجاري الدولي',
+                    desc: 'نزاعات استثمارية – عقود دولية – تنفيذ أحكام تحكيم.',
+                    fullDesc: 'فض النزاعات التجارية والاستثمارية عن طريق التحكيم، وصياغة عقود التجارة الدولية بما يحفظ حقوق الشركات والمستثمرين.',
+                    icon: 'fas fa-globe',
+                    steps: ['صياغة شرط التحكيم', 'إدارة جلسات التحكيم', 'تنفيذ الحكم'],
+                    order: 8
+                }
+            ];
 
-        // Close static modals when clicking outside
-        ['terms-modal', 'privacy-modal'].forEach(id => {
-            const m = document.getElementById(id);
-            if (m) {
-                m.addEventListener('click', (e) => {
-                    if (e.target === m) closeStaticModal(id);
+            const batch = db.batch();
+            // Note: In a real app we might verify redundancy, here we assume clean slate or overwrite logic if needed.
+            // But since we use auto-id, let's just add them.
+            // If we want to clean first, we'd need to delete. 
+            // For now, let's just mark seeded_v2 so we don't duplicate on reload.
+            initialServices.forEach(s => { const docRef = db.collection('services').doc(); batch.set(docRef, s); });
+            await batch.commit();
+            localStorage.setItem('seeded_v2', 'true');
+        };
+
+        // --- DYNAMIC SECTIONS & SETTINGS ---
+        const loadSections = async () => {
+            const container = document.getElementById('dynamic-sections-container');
+            db.collection('sections').orderBy('order', 'asc').onSnapshot(snapshot => {
+                container.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const section = { id: doc.id, ...doc.data() };
+                    renderSection(section, container);
                 });
-            }
-        });
+            });
+        };
 
-        // WhatsApp Form Handler
-        function sendToWhatsapp() {
-            const name = document.getElementById('contact-name').value;
-            const phone = document.getElementById('contact-phone').value;
-            const details = document.getElementById('contact-details').value;
+        const renderSection = async (section, container) => {
+            const sectionDiv = document.createElement('section');
+            sectionDiv.className = 'py-20 px-6 bg-[#0a0a0a] relative border-t border-gray-900';
+            sectionDiv.innerHTML = `
+                <div class="max-w-7xl mx-auto">
+                    <div class="text-center mb-12" data-aos="fade-up">
+                        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">${section.title}</h2>
+                        <div class="h-1 w-16 bg-yellow-500 mx-auto rounded-full"></div>
+                    </div>
+                    <div id="section-items-${section.id}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Items Loaded Here -->
+                        <div class="col-span-3 text-center text-gray-500">جاري تحميل المحتوى...</div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(sectionDiv);
 
-            if (!name || !phone || !details) {
-                alert('يرجى ملء جميع الحقول');
+            // Load Items for this section
+            const itemsSnapshot = await db.collection('section_items').where('sectionId', '==', section.id).orderBy('order', 'asc').get();
+            const itemsContainer = document.getElementById(`section-items-${section.id}`);
+
+            if (itemsSnapshot.empty) {
+                itemsContainer.innerHTML = '<p class="col-span-3 text-center text-gray-500">لا يوجد محتوى في هذا القسم حالياً.</p>';
                 return;
             }
 
-            const message = `طلب استشارة جديد من الموقع:%0aالاسم: ${name}%0aرقم الهاتف: ${phone}%0aالتفاصيل: ${details}`;
+            itemsContainer.innerHTML = itemsSnapshot.docs.map(doc => {
+                const item = doc.data();
+                if (item.type === 'video') {
+                    // Simple Video Embed/Link
+                    return `
+                        <div class="glass-card rounded-xl overflow-hidden group hover:border-yellow-500/50 transition">
+                            <div class="aspect-video bg-black relative flex items-center justify-center">
+                                ${item.url.includes('youtube') || item.url.includes('vimeo')
+                            ? `<iframe src="${item.url}" class="w-full h-full" frameborder="0" allowfullscreen></iframe>`
+                            : `<video src="${item.url}" controls class="w-full h-full object-cover"></video>`
+                        }
+                            </div>
+                            ${item.desc ? `<div class="p-4"><p class="text-gray-300 text-sm text-center">${item.desc}</p></div>` : ''}
+                        </div>
+                    `;
+                } else {
+                    // Image
+                    return `
+                        <div class="glass-card rounded-xl overflow-hidden group relative hover:border-yellow-500/50 transition">
+                            <div class="aspect-[4/3] overflow-hidden">
+                                <img src="${item.url}" alt="${item.desc || section.title}" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-700">
+                            </div>
+                            ${item.desc ? `
+                            <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/80 to-transparent p-6 translate-y-full group-hover:translate-y-0 transition duration-300">
+                                <p class="text-white text-center font-bold">${item.desc}</p>
+                            </div>` : ''}
+                        </div>
+                    `;
+                }
+            }).join('');
+        };
 
-            const whatsappUrl = `https://wa.me/201000545644?text=${message}`;
-            window.open(whatsappUrl, '_blank');
+        const loadSettings = () => {
+            db.collection('settings').doc('main').onSnapshot(doc => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    // Update Contact Info in Contact Section
+                    if (data.phone) {
+                        // We need to add classes or IDs to elements in contact section to target them
+                        // For now let's hope I can find them or I will update the HTML next tool call
+                        const phoneEls = document.querySelectorAll('.contact-phone-display');
+                        phoneEls.forEach(el => el.innerText = data.phone);
+                    }
+                    if (data.address) {
+                        // Assuming I add class later
+                    }
+
+                    // Update Social Links (Footer)
+                    // Checks if we have social div
+                }
+            });
+        };
+
+        // --- ROUTER ---
+        const router = {
+            currentView: 'home',
+            navigate: (viewName, params = null) => {
+                document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+                const view = document.getElementById(`view-${viewName}`);
+                if (view) { view.classList.add('active'); router.currentView = viewName; window.scrollTo(0, 0); }
+                if (viewName === 'service' && params) renderServiceDetail(params);
+            }
+        };
+
+        // --- RENDER ---
+        const renderServicesGrid = () => {
+            const grid = document.getElementById('services-grid');
+            if (servicesData.length === 0) { grid.innerHTML = '<p class="text-center text-gray-500 w-full col-span-4 py-10">لا توجد خدمات متاحة حالياً.</p>'; return; }
+            grid.innerHTML = servicesData.map(s => `
+                <div class="glass-card p-8 rounded-2xl text-center group cursor-pointer relative overflow-hidden flex flex-col items-center h-full" onclick="router.navigate('service', '${s.id}')">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-yellow-500 to-transparent transform scale-x-0 group-hover:scale-x-100 transition duration-500"></div>
+                    <div class="w-20 h-20 bg-[#021024] border border-gray-700 rounded-full flex items-center justify-center mb-6 text-yellow-500 text-3xl group-hover:bg-yellow-500 group-hover:text-black transition duration-300 shadow-lg shadow-black/50">
+                        <i class="${s.icon || 'fas fa-star'}"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-yellow-500 transition">${s.title}</h3>
+                    <p class="text-gray-400 text-sm mb-6 leading-relaxed flex-grow">${s.desc}</p>
+                    <span class="text-yellow-500 text-sm font-bold flex items-center justify-center gap-1 group-hover:gap-2 transition-all mt-auto">المزيد من التفاصيل <i class="fas fa-arrow-left"></i></span>
+                </div>
+            `).join('');
+        };
+
+        const renderServiceDetail = (id) => {
+            const service = servicesData.find(s => s.id === id);
+            if (!service) return router.navigate('home');
+            document.getElementById('detail-title').innerText = service.title;
+            // No image text
+            document.getElementById('detail-description').innerText = service.fullDesc || service.desc;
+            document.getElementById('detail-bg-icon').className = `${service.icon} text-9xl text-white`;
+
+            const stepsContainer = document.getElementById('detail-steps');
+            const steps = Array.isArray(service.steps) ? service.steps : (service.steps ? service.steps.split(',') : []);
+
+            if (steps.length > 0) {
+                document.getElementById('steps-container').classList.remove('hidden');
+                stepsContainer.innerHTML = steps.map((step, index) => `
+                    <li class="flex items-start gap-4 p-4 glass-card rounded-xl">
+                        <div class="w-8 h-8 rounded-full bg-yellow-500 text-black flex items-center justify-center font-bold text-sm flex-shrink-0 shadow-lg">${index + 1}</div>
+                        <span class="text-gray-200 text-base font-medium">${step}</span>
+                    </li>
+                `).join('');
+            } else {
+                document.getElementById('steps-container').classList.add('hidden');
+            }
+        };
+
+        function sendToWhatsapp() {
+            const n = document.getElementById('contact-name').value;
+            const p = document.getElementById('contact-phone').value;
+            const e = document.getElementById('contact-email').value;
+            const m = document.getElementById('contact-msg').value;
+
+            const msgBody = `*طلب استشارة جديد*%0aالاسم: ${n}%0aالهاتف: ${p}%0aالايميل: ${e}%0aالرسالة: ${m}`;
+            window.open(`https://wa.me/201000545644?text=${msgBody}`, '_blank');
         }
+
+        initAuth();
     </script>
 </body>
 
